@@ -7,6 +7,11 @@ variable "availability_domain" {
   default     = ""
 }
 
+variable "slurm_version" {
+  description = "The version of the Slurm."
+  default     = "18.08.4"
+}
+
 variable "control_display_name" {
   description = "The name of the master instance. "
   default     = ""

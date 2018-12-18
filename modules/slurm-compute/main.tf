@@ -2,7 +2,8 @@ data "template_file" "execution" {
   template = "${file("${path.module}/scripts/setup.sh")}"
 
   vars = {
-    control_ip = "${var.slurm_control_ip}"
+    control_ip    = "${var.slurm_control_ip}"
+    slurm_version = "${var.slurm_version}"
   }
 }
 
@@ -35,11 +36,15 @@ resource "oci_core_instance" "slurm_compute" {
 
   provisioner "file" {
     connection = {
-      host        = "${self.public_ip}"
+      host        = "${self.private_ip}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     content     = "${data.template_file.execution.rendered}"
@@ -48,11 +53,15 @@ resource "oci_core_instance" "slurm_compute" {
 
   provisioner "file" {
     connection = {
-      host        = "${self.public_ip}"
+      host        = "${self.private_ip}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     source      = "${var.ssh_private_key}"
@@ -61,11 +70,15 @@ resource "oci_core_instance" "slurm_compute" {
 
   provisioner "remote-exec" {
     connection = {
-      host        = "${self.public_ip}"
+      host        = "${self.private_ip}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     inline = [

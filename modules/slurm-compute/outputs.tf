@@ -6,10 +6,6 @@ output "private_ips" {
   value = ["${oci_core_instance.slurm_compute.*.private_ip}"]
 }
 
-output "public_ips" {
-  value = ["${oci_core_instance.slurm_compute.*.public_ip}"]
-}
-
 output "host_names" {
   value = ["${oci_core_instance.slurm_compute.*.display_name}"]
 }

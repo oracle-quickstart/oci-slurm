@@ -1,5 +1,9 @@
 data "template_file" "execution" {
   template = "${file("${path.module}/scripts/setup.sh")}"
+
+  vars {
+    slurm_version = "${var.slurm_version}"
+  }
 }
 
 data "template_file" "dbconfig" {

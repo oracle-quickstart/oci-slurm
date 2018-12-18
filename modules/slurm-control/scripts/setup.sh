@@ -19,23 +19,23 @@ sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 sudo yum install -y munge-devel munge-libs readline-devel perl-ExtUtils-MakeMaker openssl-devel pam-devel rpm-build gcc perl-DBI perl-Switch munge mariadb-devel
 
 # Oracle Object Storage Slurm RPM URL
-OOSURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/SlurmPackage/o/slurm-18.08.4-rpm.tar.gz"
+OOSURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/SlurmPackage/o/slurm-${slurm_version}-rpm.tar.gz"
 
 # Slurm Offical Download URL
-SCHEDMDURL="https://download.schedmd.com/slurm/slurm-18.08.4.tar.bz2"
+SCHEDMDURL="https://download.schedmd.com/slurm/slurm-${slurm_version}.tar.bz2"
 
 # Try Oracle Object Storage URL first to install Slurm
 if validate_url $OOSURL
 then
     echo "Download Slurm RPM packages from Oracle Object Storage..."
     wget $OOSURL
-    tar -xzvf slurm-18.08.4-rpm.tar.gz
+    tar -xzvf slurm-${slurm_version}-rpm.tar.gz
     sudo rpm -Uvh ~/RPMS/x86_64/*.rpm
 else
     echo "Download Slurm RPM packages from SCHEDMD.COM..."
     wget $SCHEDMDURL
     # Building rpm packages
-    rpmbuild -ta slurm-18.08.4.tar.bz2
+    rpmbuild -ta slurm-${slurm_version}.tar.bz2
     sudo rpm -Uvh ~/rpmbuild/RPMS/x86_64/*.rpm
 fi
 

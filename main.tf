@@ -30,6 +30,9 @@ module "slurm-compute" {
   ssh_authorized_keys  = "${var.ssh_authorized_keys}"
   ssh_private_key      = "${var.ssh_private_key}"
   user_data            = "${var.compute_user_data}"
+  bastion_host          = "${var.bastion_host}"
+  bastion_user          = "${var.bastion_user}"
+  bastion_private_key   = "${var.bastion_private_key}"
 }
 
 ############################################
@@ -58,11 +61,14 @@ resource "null_resource" "compute" {
 
   provisioner "file" {
     connection = {
-      host        = "${module.slurm-compute.public_ips[count.index]}"
+      host        = "${module.slurm-compute.private_ips[count.index]}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     source      = "${path.module}/scripts/slurm.conf.tmp"
@@ -71,11 +77,14 @@ resource "null_resource" "compute" {
 
   provisioner "file" {
     connection = {
-      host        = "${module.slurm-compute.public_ips[count.index]}"
+      host        = "${module.slurm-compute.private_ips[count.index]}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     content     = "${data.template_file.config_slurm.rendered}"
@@ -84,11 +93,14 @@ resource "null_resource" "compute" {
 
   provisioner "remote-exec" {
     connection = {
-      host        = "${module.slurm-compute.public_ips[count.index]}"
+      host        = "${module.slurm-compute.private_ips[count.index]}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     inline = [
