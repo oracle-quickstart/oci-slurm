@@ -13,4 +13,5 @@ module "slurm-cluster" {
   compute_ad          = "${data.template_file.ad_names.*.rendered[1]}"
   compute_subnet_id   = "${oci_core_subnet.slurmcompute.id}"
   compute_image_id    = "${var.image_id[var.region]}"
+  compute_count       = 1
 }

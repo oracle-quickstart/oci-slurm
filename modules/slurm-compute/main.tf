@@ -7,7 +7,7 @@ data "template_file" "execution" {
 }
 
 resource "oci_core_instance" "slurm_compute" {
-  count               = "${var.number_of_nodes}"
+  count               = "${var.compute_count}"
   availability_domain = "${var.availability_domain}"
   compartment_id      = "${var.compartment_ocid}"
   display_name        = "${var.compute_display_name}${count.index+1}"

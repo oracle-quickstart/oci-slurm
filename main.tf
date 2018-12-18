@@ -19,7 +19,7 @@ module "slurm-control" {
 ############################################
 module "slurm-compute" {
   source               = "./modules/slurm-compute"
-  number_of_nodes      = "${var.compute_count}"
+  compute_count        = "${var.compute_count}"
   availability_domain  = "${var.compute_ad}"
   compartment_ocid     = "${var.compartment_ocid}"
   slurm_control_ip     = "${module.slurm-control.private_ip}"
@@ -41,8 +41,8 @@ data "template_file" "config_slurm" {
   vars = {
     control_ip        = "${module.slurm-control.private_ip}"
     control_hostname  = "${module.slurm-control.host_name}"
-    compute_ips       = "${join(" ", module.slurm-compute.private_ips)}"
-    compute_hostnames = "${join(" ", module.slurm-compute.host_names)}"
+    compute_ips       = "${join(",", module.slurm-compute.private_ips)}"
+    compute_hostnames = "${join(",", module.slurm-compute.host_names)}"
   }
 }
 
@@ -50,6 +50,10 @@ data "template_file" "config_slurm" {
 # Config Slurm Compute Node(s)
 ############################################
 resource "null_resource" "compute" {
+  triggers {
+    compute_hostnames = "${join(" ", module.slurm-compute.host_names)}"
+  }
+
   count = "${var.compute_count}"
 
   provisioner "file" {

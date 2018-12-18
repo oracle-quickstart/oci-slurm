@@ -4,8 +4,8 @@ set -e -x
 
 
 # Get Slurm compute node ip(s) and display name(s)
-IFS=' ' read -r -a ips <<<"${compute_ips}"
-IFS=' ' read -r -a host_names <<<"${compute_hostnames}"
+IFS=',' read -r -a ips <<<"${compute_ips}"
+IFS=',' read -r -a host_names <<<"${compute_hostnames}"
 
 # Update Slurm config file
 sed -i 's/^\(ControlMachine=\).*/\1${control_hostname}/' /home/opc/slurm.conf.tmp
@@ -31,7 +31,7 @@ if [ "$1" = "compute" ]
 then
     echo "Restart Slurm Control Daemon on ${compute_hostnames} ..."
     sudo systemctl enable slurmd.service
-    sudo systemctl start slurmd.service
+    sudo systemctl restart slurmd.service
     sudo systemctl status slurmd.service
 fi
 
@@ -41,7 +41,7 @@ if [ "$1" = "control" ]
 then
     echo "Restart Slurm Control Daemon on ${control_hostname} ..."
     sudo systemctl enable slurmctld.service
-    sudo systemctl start slurmctld.service
+    sudo systemctl restart slurmctld.service
     sudo systemctl status slurmctld.service
     sleep 10
     sinfo

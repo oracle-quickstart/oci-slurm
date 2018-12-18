@@ -12,7 +12,7 @@ variable "compute_display_name" {
   default     = ""
 }
 
-variable "number_of_nodes" {
+variable "compute_count" {
   description = "The number of compute instance(s) to create"
 }
 
