@@ -13,7 +13,7 @@ variable "slurm_version" {
 }
 
 variable "control_display_name" {
-  description = "The name of the master instance. "
+  description = "The name of the Slurm control instance. "
   default     = ""
 }
 
@@ -23,7 +23,7 @@ variable "subnet_id" {
 }
 
 variable "shape" {
-  description = "Instance shape to use for master instance. "
+  description = "Instance shape to use for control instance. "
   default     = ""
 }
 
