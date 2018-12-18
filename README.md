@@ -15,9 +15,9 @@ Instead of figuring out the details of how to run a piece of infrastructure from
 
 ## How to use this Module
 Each Module has the following folder structure:
-* [root](): Contains a root module calls slurm-control and slurm-compute sub-modules to create a Slurm cluster in OCI.
-* [modules](): Contains the reusable code for this module, broken down into one or more modules.
-* [examples](): Contains examples of how to use the modules.
+* [root](./): Contains a root module calls slurm-control and slurm-compute sub-modules to create a Slurm cluster in OCI.
+* [modules](./modules): Contains the reusable code for this module, broken down into one or more modules.
+* [examples](./examples/): Contains examples of how to use the modules.
 
 The following code shows how to deploy Slurm Cluster servers using this module:
 
@@ -72,4 +72,4 @@ Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
 
 Licensed under the Universal Permissive License 1.0 or Apache License 2.0.
 
-See [LICENSE](/LICENSE.txt) for more details.
+See [LICENSE](./LICENSE.txt) for more details.
