@@ -1,5 +1,5 @@
 ## Create VCN and Deploy Jenkins Cluster
-This example creates a VCN in Oracle Cloud Infrastructure including  This configuration generally implements this:
+This example creates a VCN in Oracle Cloud Infrastructure including default route table, DHCP options, security list and subnets from scratch, then use terraform_oci_slurm module to deploy a Slurm cluster. This configuration generally implements this: 
 ![Slurm architecture](images/Slurm_On_OCI_Example.png)
 
 ### Using this example
