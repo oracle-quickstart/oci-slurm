@@ -123,11 +123,14 @@ resource "null_resource" "control" {
   }
   provisioner "file" {
     connection = {
-      host        = "${module.slurm-control.public_ip}"
+      host        = "${module.slurm-control.private_ip}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     source      = "${path.module}/scripts/slurm.conf.tmp"
@@ -135,11 +138,14 @@ resource "null_resource" "control" {
   }
   provisioner "file" {
     connection = {
-      host        = "${module.slurm-control.public_ip}"
+      host        = "${module.slurm-control.private_ip}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     content     = "${data.template_file.config_slurm.rendered}"
@@ -147,11 +153,14 @@ resource "null_resource" "control" {
   }
   provisioner "remote-exec" {
     connection = {
-      host        = "${module.slurm-control.public_ip}"
+      host        = "${module.slurm-control.private_ip}"
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = "${file("${var.ssh_private_key}")}"
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
     inline = [
