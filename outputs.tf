@@ -1,7 +1,3 @@
-output "control_public_ip" {
-  value = "${module.slurm-control.public_ip}"
-}
-
 output "control_private_ip" {
   value = "${module.slurm-control.private_ip}"
 }
