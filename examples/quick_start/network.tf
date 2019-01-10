@@ -110,6 +110,15 @@ resource "oci_core_security_list" "slurmnode" {
       protocol = "6"
       source   = "0.0.0.0/0"
     },
+    {
+      tcp_options {
+        "max" = "All"
+        "min" = "All"
+      }
+
+      protocol = "6"
+      source   = "10.0.0.0/16"
+    },
   ]
 }
 
