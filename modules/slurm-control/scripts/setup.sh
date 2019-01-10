@@ -16,7 +16,7 @@ function validate_url() {
 sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 # Installing required bits and bobs
-sudo yum install -y munge-devel munge-libs readline-devel perl-ExtUtils-MakeMaker openssl-devel pam-devel rpm-build gcc perl-DBI perl-Switch munge mariadb-devel
+sudo yum install -y nfs-utils munge-devel munge-libs readline-devel perl-ExtUtils-MakeMaker openssl-devel pam-devel rpm-build gcc perl-DBI perl-Switch munge mariadb-devel
 
 # Oracle Object Storage Slurm RPM URL
 OOSURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/SlurmPackage/o/slurm-${slurm_version}-rpm.tar.gz"
@@ -50,6 +50,8 @@ sudo touch /var/log/slurmctld.log
 sudo chown slurm: /var/log/slurmctld.log
 sudo touch /var/log/slurm_jobacct.log /var/log/slurm_jobcomp.log
 sudo chown slurm: /var/log/slurm_jobacct.log /var/log/slurm_jobcomp.log
+
+#sudo mount.nfs  10.0.16.4:/shared /mnt/shared
 
 # Install MariaDB
 sudo yum install -y mariadb-server

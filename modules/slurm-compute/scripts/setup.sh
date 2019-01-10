@@ -16,7 +16,7 @@ function validate_url() {
 sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 # Installing required bits and bobs
-sudo yum install -y munge-devel munge-libs readline-devel perl-ExtUtils-MakeMaker openssl-devel pam-devel rpm-build gcc perl-DBI perl-Switch munge mariadb-devel
+sudo yum install -y nfs-utils munge-devel munge-libs readline-devel perl-ExtUtils-MakeMaker openssl-devel pam-devel rpm-build gcc perl-DBI perl-Switch munge mariadb-devel
 
 # Oracle Object Storage Slurm RPM URL
 OOSURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/SlurmPackage/o/slurm-${slurm_version}-rpm.tar.gz"
@@ -49,6 +49,8 @@ sudo chmod 755 /var/spool/slurmd
 sudo touch /var/log/slurmd.log
 sudo chown slurm: /var/log/slurmd.log
 sudo cp /etc/slurm/cgroup.conf.example /etc/slurm/cgroup.conf
+
+#sudo mount.nfs  10.0.16.4:/shared /mnt/shared
 
 # Open the default ports that Slurm uses
 sudo firewall-cmd --permanent --zone=public --add-port=6817/udp
