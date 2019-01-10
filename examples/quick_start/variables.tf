@@ -11,6 +11,10 @@ variable "vcn_cidr" {
   default = "10.0.0.0/16"
 }
 
+variable "ExportPathFS" {
+  default = "/shared"
+}
+
 locals {
   // contains bastion and anything internet-facing
   dmz_tier_prefix = "${cidrsubnet("${var.vcn_cidr}", 2, 0)}"
