@@ -69,3 +69,7 @@ variable "bastion_private_key" {}
 variable "bastion_ad_index" {
   default = 2
 }
+variable "fs_ip" {
+  default = ""
+}
+

@@ -2,6 +2,7 @@ data "template_file" "execution" {
   template = "${file("${path.module}/scripts/setup.sh")}"
 
   vars {
+    fs_ip =     "${var.slurm_fs_ip}" 
     slurm_version = "${var.slurm_version}"
   }
 }
