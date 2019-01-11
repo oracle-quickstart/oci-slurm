@@ -50,3 +50,7 @@ variable "image_id" {
 variable "user_data" {
   description = "A User Data script to execute while the server is booting."
 }
+
+variable "slurm_fs_ip" {
+  default = ""
+}

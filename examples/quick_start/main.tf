@@ -40,4 +40,5 @@ module "slurm-cluster" {
   bastion_host        = "${oci_core_instance.slurmbastion.public_ip}"
   bastion_user        = "${var.bastion_user}"
   bastion_private_key = "${var.bastion_private_key}"
+  fs_ip               = "${var.fs_ip}"
 }
