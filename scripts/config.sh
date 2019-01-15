@@ -28,6 +28,9 @@ echo "PartitionName=debug Nodes="${compute_hostnames}" Default=YES MaxTime=INFIN
 sudo mv /home/opc/slurm.conf.tmp /etc/slurm/slurm.conf
 sudo echo "include /mnt/shared/apps/slurm/slurm.conf" >> /etc/slurm/slurm.conf
 
+sudo chmod 777  /etc/hosts
+sudo cat /mnt/shared/hosts >> /etc/hosts
+
 # To start Slurm node daemon
 if [ "$1" = "compute" ]
 then
@@ -52,6 +55,11 @@ then
     sudo systemctl enable slurmctld.service
     sudo systemctl restart slurmctld.service
     sudo systemctl status slurmctld.service
+sudo sacctmgr add cluster ocihpc << EOF
+
+y
+EOF
+
     touch users.yml
     sudo echo \"---\" >> users.yml
     sudo echo \"users:\" >> users.yml
