@@ -85,12 +85,16 @@ sudo systemctl status munge
 sudo systemctl enable munge
 
 # Open the default ports that Slurm uses
-sudo firewall-cmd --permanent --zone=public --add-port=6817/udp
-sudo firewall-cmd --permanent --zone=public --add-port=6817/tcp
-sudo firewall-cmd --permanent --zone=public --add-port=6818/tcp
-sudo firewall-cmd --permanent --zone=public --add-port=6819/tcp
-sudo firewall-cmd --permanent --zone=public --add-port=7321/tcp
-sudo firewall-cmd --reload
+#sudo firewall-cmd --permanent --zone=public --add-port=6817/udp
+#sudo firewall-cmd --permanent --zone=public --add-port=6817/tcp
+#sudo firewall-cmd --permanent --zone=public --add-port=6818/tcp
+#sudo firewall-cmd --permanent --zone=public --add-port=6819/tcp
+#sudo firewall-cmd --permanent --zone=public --add-port=7321/tcp
+#sudo firewall-cmd --reload
+
+sudo systemctl stop firewalld.service
+sudo systemctl disable firewalld.service
+
 
 sudo mkdir /mnt/shared
 sudo chmod 777 /home/opc/getfsipaddr
@@ -102,3 +106,6 @@ sudo cp /home/opc/.ssh/id_rsa.pub /mnt/shared/
 sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
 sudo chmod 777 installmpi
 ./installmpi
+sudo touch /mnt/shared/hosts
+sudo chmod 777  /mnt/shared/hosts
+sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts

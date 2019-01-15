@@ -51,13 +51,14 @@ sudo chown slurm: /var/log/slurmd.log
 sudo cp /etc/slurm/cgroup.conf.example /etc/slurm/cgroup.conf
 
 # Open the default ports that Slurm uses
-sudo firewall-cmd --permanent --zone=public --add-port=6817/udp
-sudo firewall-cmd --permanent --zone=public --add-port=6817/tcp
-sudo firewall-cmd --permanent --zone=public --add-port=6818/tcp
-sudo firewall-cmd --permanent --zone=public --add-port=6819/tcp
-sudo firewall-cmd --permanent --zone=public --add-port=7321/tcp
+#sudo firewall-cmd --permanent --zone=public --add-port=6817/udp
+#sudo firewall-cmd --permanent --zone=public --add-port=6817/tcp
+#sudo firewall-cmd --permanent --zone=public --add-port=6818/tcp
+#sudo firewall-cmd --permanent --zone=public --add-port=6819/tcp
+#sudo firewall-cmd --permanent --zone=public --add-port=7321/tcp
 #sudo firewall-cmd --reload
-
+sudo systemctl stop firewalld.service
+sudo systemctl disable firewalld.service
 
 # Get munge key from Slurm control node
 ssh -i ~/tmp.key -oStrictHostKeyChecking=no opc@${control_ip} "sudo cat /etc/munge/munge.key" > /home/opc/munge.key.tmp
@@ -82,4 +83,5 @@ sudo mount.nfs  $ip:/shared /mnt/shared
 sudo chmod 777 installmpi
 ./installmpi
 sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
-sudo firewall-cmd --reload
+sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts
+#sudo firewall-cmd --reload
