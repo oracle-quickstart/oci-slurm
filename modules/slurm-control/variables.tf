@@ -50,3 +50,17 @@ variable "image_id" {
 variable "user_data" {
   description = "A User Data script to execute while the server is booting."
 }
+
+
+variable "bastion_host" {
+  description = "The bastion host IP."
+}
+
+variable "bastion_user" {
+  description = "The SSH user to connect to the bastion host."
+  default     = "opc"
+}
+
+variable "bastion_private_key" {
+  description = "The private key path to access the bastion host."
+}
