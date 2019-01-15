@@ -12,7 +12,7 @@ module "slurm-control" {
   ssh_authorized_keys  = "${var.ssh_authorized_keys}"
   ssh_private_key      = "${var.ssh_private_key}"
   user_data            = "${var.control_user_data}"
-  slurm_fs_ip          = "${var.fs_ip}"
+  slurm_fs_ip          = "${var.slurm_fs_ip}"
 }
 
 ############################################
@@ -34,7 +34,7 @@ module "slurm-compute" {
   bastion_host         = "${var.bastion_host}"
   bastion_user         = "${var.bastion_user}"
   bastion_private_key  = "${var.bastion_private_key}"
-  slurm_fs_ip          = "${var.fs_ip}"
+  slurm_fs_ip          = "${var.slurm_fs_ip}"
 }
 
 ############################################
@@ -46,6 +46,7 @@ data "template_file" "config_slurm" {
   vars = {
     control_ip        = "${module.slurm-control.private_ip}"
     control_hostname  = "${module.slurm-control.host_name}"
+    slurm_fs_ip          = "${var.slurm_fs_ip}"
     compute_ips       = "${join(",", module.slurm-compute.private_ips)}"
     compute_hostnames = "${join(",", module.slurm-compute.host_names)}"
   }

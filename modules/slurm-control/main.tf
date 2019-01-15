@@ -2,13 +2,21 @@ data "template_file" "execution" {
   template = "${file("${path.module}/scripts/setup.sh")}"
 
   vars {
-    fs_ip =     "${var.slurm_fs_ip}" 
+    slurm_fs_ip =     "${var.slurm_fs_ip}" 
     slurm_version = "${var.slurm_version}"
   }
 }
 
 data "template_file" "dbconfig" {
   template = "${file("${path.module}/scripts/slurmdbd.conf.tmp")}"
+}
+
+data "template_file" "getfsipaddr" {
+  template = "${file("${path.module}/scripts/getfsipaddr")}"
+}
+
+data "template_file" "installmpi" {
+  template = "${file("${path.module}/scripts/installmpi")}"
 }
 
 resource "oci_core_instance" "slurm_control" {
@@ -63,6 +71,32 @@ resource "oci_core_instance" "slurm_control" {
     destination = "~/slurmdbd.conf.tmp"
   }
 
+  provisioner "file" {
+    connection = {
+      host        = "${self.public_ip}"
+      agent       = false
+      timeout     = "5m"
+      user        = "opc"
+      private_key = "${file("${var.ssh_private_key}")}"
+    }
+
+    content     = "${data.template_file.getfsipaddr.rendered}"
+    destination = "~/getfsipaddr"
+  }
+
+  provisioner "file" {
+    connection = {
+      host        = "${self.public_ip}"
+      agent       = false
+      timeout     = "5m"
+      user        = "opc"
+      private_key = "${file("${var.ssh_private_key}")}"
+    }
+
+    content     = "${data.template_file.installmpi.rendered}"
+    destination = "~/installmpi"
+  }
+
   provisioner "remote-exec" {
     connection = {
       host        = "${self.public_ip}"
@@ -74,6 +108,7 @@ resource "oci_core_instance" "slurm_control" {
 
     inline = [
       "chmod +x ~/install_slurm.sh",
+      "sudo yes \"y\" | ssh-keygen -N \"\" -f ~/.ssh/id_rsa",
       "~/install_slurm.sh",
     ]
   }

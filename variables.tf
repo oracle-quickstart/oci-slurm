@@ -90,6 +90,6 @@ variable "bastion_private_key" {
   description = "The private key path to access the bastion host."
 }
 
-variable "fs_ip" {
+variable "slurm_fs_ip" {
   description = "The fs ip."
 }
