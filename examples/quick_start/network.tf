@@ -150,7 +150,7 @@ resource "oci_core_subnet" "slurmcontrol" {
   security_list_ids   = ["${oci_core_security_list.slurmnode.id}"]
   compartment_id      = "${var.compartment_ocid}"
   vcn_id              = "${oci_core_virtual_network.slurmvcn.id}"
-  route_table_id      = "${oci_core_route_table.public.id}"
+  route_table_id      = "${oci_core_route_table.private.id}"
   dhcp_options_id     = "${oci_core_virtual_network.slurmvcn.default_dhcp_options_id}"
 }
 
