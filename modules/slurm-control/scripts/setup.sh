@@ -92,6 +92,17 @@ sudo systemctl enable munge
 #sudo firewall-cmd --permanent --zone=public --add-port=7321/tcp
 #sudo firewall-cmd --reload
 
+#install pyslurm
+sudo yum install Cython -y
+sudo yum install git -y
+sudo yum install python-devel -y
+wget https://github.com/PySlurm/pyslurm/archive/18.08.0.zip -q
+unzip 18.08.0.zip
+cd pyslurm-18.08.0
+sudo python setup.py build
+sudo python setup.py install
+cd -
+
 sudo systemctl stop firewalld.service
 sudo systemctl disable firewalld.service
 
@@ -105,7 +116,7 @@ sudo mount.nfs  $ip:/shared /mnt/shared
 sudo cp /home/opc/.ssh/id_rsa.pub /mnt/shared/
 sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
 sudo chmod 777 installmpi
-./installmpi
+#./installmpi
 sudo touch /mnt/shared/hosts
 sudo chmod 777  /mnt/shared/hosts
 sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts

@@ -45,66 +45,43 @@ resource "oci_core_instance" "slurm_control" {
     create = "10m"
   }
 
+  connection = {
+    host        = "${self.private_ip}"
+    agent       = false
+    timeout     = "10m"
+    user        = "opc"
+    private_key = "${file("${var.ssh_private_key}")}"
+    bastion_host        = "${var.bastion_host}"
+    bastion_user        = "${var.bastion_user}"
+    bastion_private_key = "${file("${var.bastion_private_key}")}"
+  }
+
+
   provisioner "file" {
-    connection = {
-      host        = "${self.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
     content     = "${data.template_file.execution.rendered}"
     destination = "~/install_slurm.sh"
   }
 
   provisioner "file" {
-    connection = {
-      host        = "${self.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
     content     = "${data.template_file.dbconfig.rendered}"
     destination = "~/slurmdbd.conf.tmp"
   }
 
   provisioner "file" {
-    connection = {
-      host        = "${self.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
     content     = "${data.template_file.getfsipaddr.rendered}"
     destination = "~/getfsipaddr"
   }
 
   provisioner "file" {
-    connection = {
-      host        = "${self.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
     content     = "${data.template_file.installmpi.rendered}"
     destination = "~/installmpi"
   }
 
   provisioner "remote-exec" {
-    connection = {
-      host        = "${self.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
     inline = [
       "chmod +x ~/install_slurm.sh",
