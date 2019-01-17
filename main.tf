@@ -13,6 +13,9 @@ module "slurm-control" {
   ssh_private_key      = "${var.ssh_private_key}"
   user_data            = "${var.control_user_data}"
   slurm_fs_ip          = "${var.slurm_fs_ip}"
+  bastion_host         = "${var.bastion_host}"
+  bastion_user         = "${var.bastion_user}"
+  bastion_private_key  = "${var.bastion_private_key}" 
 }
 
 ############################################

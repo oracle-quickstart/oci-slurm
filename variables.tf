@@ -44,7 +44,7 @@ variable "control_user_data" {
 
 variable "compute_count" {
   description = "Number of compute instances to launch. "
-  default     = 1
+  default     = 2 
 }
 
 variable "compute_ad" {

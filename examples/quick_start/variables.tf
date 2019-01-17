@@ -67,7 +67,7 @@ variable "bastion_authorized_keys" {}
 variable "bastion_private_key" {}
 
 variable "bastion_ad_index" {
-  default = 2
+  default = 2 
 }
 
 variable "slurm_fs_ip" {
