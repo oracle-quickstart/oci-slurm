@@ -3,7 +3,7 @@
 ############################################
 # Gets a list of Availability Domains
 data "oci_identity_availability_domains" "ad" {
-  compartment_id = "${var.compartment_id}"
+  compartment_id = "${var.compartment_ocid}"
 }
 
 data "template_file" "ad_names" {
