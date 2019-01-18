@@ -93,3 +93,9 @@ variable "bastion_private_key" {
 variable "slurm_fs_ip" {
   description = "The fs ip."
 }
+
+variable "auth_display_name" {
+  description = "The name of the auth instance. "
+  default     = "slurmauth"
+}
+

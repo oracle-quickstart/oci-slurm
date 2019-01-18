@@ -19,6 +19,25 @@ module "slurm-control" {
 }
 
 ############################################
+# Setup Slurm Auth Node
+############################################
+module "slurm-auth" {
+  source               = "./modules/slurm-auth"
+  availability_domain  = "${var.control_ad}"
+  compartment_ocid     = "${var.compartment_ocid}"
+  auth_display_name = "${var.auth_display_name}"
+  image_id             = "${var.control_image_id}"
+  shape                = "${var.control_shape}"
+  subnet_id            = "${var.control_subnet_id}"
+  ssh_authorized_keys  = "${var.ssh_authorized_keys}"
+  ssh_private_key      = "${var.ssh_private_key}"
+  user_data            = "${var.control_user_data}"
+  bastion_host         = "${var.bastion_host}"
+  bastion_user         = "${var.bastion_user}"
+  bastion_private_key  = "${var.bastion_private_key}"
+}
+
+############################################
 # Setup Slurm Compute Node(s)
 ############################################
 module "slurm-compute" {

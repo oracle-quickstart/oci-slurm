@@ -2,6 +2,10 @@ output "slurm_control_private_ip" {
   value = "${module.slurm-cluster.control_private_ip}"
 }
 
+output "slurm_auth_private_ip" {
+  value = "${module.slurm-cluster.auth_private_ip}"
+}
+
 output "slurm_compute_private_ip" {
   value = "${module.slurm-cluster.compute_node_private_ips}"
 }
