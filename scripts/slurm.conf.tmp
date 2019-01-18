@@ -18,3 +18,4 @@ ClusterName=ocihpc
 JobAcctGatherType=jobacct_gather/linux
 SlurmctldLogFile=/var/log/slurmctld.log
 SlurmdLogFile=/var/log/slurmd.log
+SrunPortRange=60001-63000
