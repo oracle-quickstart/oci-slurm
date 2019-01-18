@@ -55,10 +55,12 @@ then
     sudo systemctl enable slurmctld.service
     sudo systemctl restart slurmctld.service
     sudo systemctl status slurmctld.service
-sudo sacctmgr add cluster ocihpc << EOF
+    echo y |sudo sacctmgr add cluster ocihpc 
+    systemctl restart slurmdbd.service && sleep 10 && systemctl restart slurmctld.service  
 
-y
-EOF
+#sudo sacctmgr add cluster ocihpc << EOF
+#y
+#EOF
 
     touch users.yml
     sudo echo \"---\" >> users.yml
