@@ -57,6 +57,7 @@ sudo firewall-cmd --permanent --zone=public --add-port=6818/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=6819/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=7321/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=60001-63000/tcp
+sudo firewall-cmd --permanent --zone=public --add-service=nfs
 #sudo firewall-cmd --reload
 
 #sudo systemctl stop firewalld.service
@@ -84,6 +85,9 @@ cd pyslurm-18.08.0
 sudo python setup.py build
 sudo python setup.py install
 cd -
+
+# install environment-modules
+sudo yum install environment-modules -y
 
 sudo mkdir /mnt/shared
 chmod 777 /home/opc/scpipaddr

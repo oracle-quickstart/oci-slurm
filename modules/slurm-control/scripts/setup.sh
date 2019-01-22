@@ -91,6 +91,7 @@ sudo firewall-cmd --permanent --zone=public --add-port=6818/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=6819/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=7321/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=60001-63000/tcp
+sudo firewall-cmd --permanent --zone=public --add-service=nfs 
 #sudo firewall-cmd --reload
 
 #install pyslurm
@@ -104,9 +105,11 @@ sudo python setup.py build
 sudo python setup.py install
 cd -
 
+# install environment-modules
+sudo yum install environment-modules -y
+
 #sudo systemctl stop firewalld.service
 #sudo systemctl disable firewalld.service
-
 
 sudo mkdir /mnt/shared
 sudo chmod 777 /home/opc/getfsipaddr

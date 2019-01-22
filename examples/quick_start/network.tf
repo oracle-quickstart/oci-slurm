@@ -111,11 +111,130 @@ resource "oci_core_security_list" "slurmnode" {
       source   = "0.0.0.0/0"
     },
     {
+      tcp_options {
+        "max" = "63000"
+        "min" = "60001"
+      }
+
       protocol = "6"
-      source   = "10.0.0.0/16"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "2050"
+        "min" = "2048"
+      }
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "111"
+        "min" = "111"
+      }
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = "111"
+        "min" = "111"
+      }
+      protocol = "17"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = "2050"
+        "min" = "2048"
+      }
+      protocol = "17"
+      source   = "0.0.0.0/0"
     },
   ]
 }
+
+resource "oci_core_security_list" "slurmcomputenode" {
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "slurmcnode"
+  vcn_id         = "${oci_core_virtual_network.slurmvcn.id}"
+
+  egress_security_rules = [{
+    protocol    = "6"
+    destination = "0.0.0.0/0"
+  }]
+
+  ingress_security_rules = [{
+    tcp_options {
+      "max" = 22
+      "min" = 22
+    }
+
+    protocol = "6"
+    source   = "0.0.0.0/0"
+  },
+    {
+      tcp_options {
+        "max" = "6819"
+        "min" = "6817"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "7312"
+        "min" = "7312"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "63000"
+        "min" = "60001"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "2050"
+        "min" = "2048"
+      }
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "111"
+        "min" = "111"
+      }
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = "111"
+        "min" = "111"
+      }
+      protocol = "17"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = "2050"
+        "min" = "2048"
+      }
+      protocol = "17"
+      source   = "0.0.0.0/0"
+    },
+  ]
+}
+
 
 resource "oci_core_security_list" "slurmbastion" {
   compartment_id = "${var.compartment_ocid}"
@@ -166,7 +285,7 @@ resource "oci_core_subnet" "slurmcompute" {
   cidr_block          = "${cidrsubnet("${local.compute_subnet_prefix}", 4, 0)}"
   display_name        = "slurmcompute"
   dns_label           = "slurmcompute"
-  security_list_ids   = ["${oci_core_security_list.slurmnode.id}"]
+  security_list_ids   = ["${oci_core_security_list.slurmcomputenode.id}"]
   compartment_id      = "${var.compartment_ocid}"
   vcn_id              = "${oci_core_virtual_network.slurmvcn.id}"
   route_table_id      = "${oci_core_route_table.private.id}"
