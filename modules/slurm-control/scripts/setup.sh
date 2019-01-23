@@ -124,4 +124,11 @@ sudo chmod 777 installmpi
 sudo touch /mnt/shared/hosts
 sudo chmod 777  /mnt/shared/hosts
 sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts
+
+#sudo  mount.nfs $ip:/home/ /home/
+sudo mkdir /u01
+sudo  mount.nfs $ip:/u01/ /u01/
+sudo mkdir /UserHome
+sudo  mount.nfs $ip:/UserHome /UserHome
+
 sudo firewall-cmd --reload
