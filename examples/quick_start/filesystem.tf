@@ -4,6 +4,12 @@ resource "oci_file_storage_file_system" "TestClusterFS" {
   compartment_id      = "${var.compartment_ocid}"
 }
 
+resource "oci_file_storage_file_system" "ClusterFSHome" {
+  availability_domain = "${data.template_file.ad_names.*.rendered[0]}"
+  compartment_id      = "${var.compartment_ocid}"
+}
+
+
 resource "oci_file_storage_mount_target" "TestClusterFSMountTarget" {
   count               = 1
   availability_domain = "${data.template_file.ad_names.*.rendered[0]}" 
@@ -27,7 +33,7 @@ resource "oci_file_storage_export" "TestClusterFSExport" {
 
 resource "oci_file_storage_export" "ClusterFSExportHome" {
   export_set_id  = "${oci_file_storage_mount_target.TestClusterFSMountTarget.export_set_id}"
-  file_system_id = "${oci_file_storage_file_system.TestClusterFS.id}"
+  file_system_id = "${oci_file_storage_file_system.ClusterFSHome.id}"
   path           = "/UserHome"
 
   export_options {
