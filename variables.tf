@@ -44,7 +44,7 @@ variable "control_user_data" {
 
 variable "compute_count" {
   description = "Number of compute instances to launch. "
-  default     = 2 
+  default     = 2
 }
 
 variable "compute_ad" {
@@ -99,3 +99,12 @@ variable "auth_display_name" {
   default     = "slurmauth"
 }
 
+variable "enable_nis" {
+  default = "true"
+}
+
+variable "enable_ldap" {
+  default = "false"
+}
+
+variable "auth_subnet_id" {}
