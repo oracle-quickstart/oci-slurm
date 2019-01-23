@@ -26,6 +26,7 @@ locals {
   control_subnet_prefix  = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 1)}"
 
   compute_subnet_prefix   = "${cidrsubnet("${local.app_tier_prefix}", 2, 0)}"
+  auth_subnet_prefix   = "${cidrsubnet("${local.app_tier_prefix}", 2, 1)}"
 }
 
 variable "label_prefix" {
@@ -67,9 +68,15 @@ variable "bastion_authorized_keys" {}
 variable "bastion_private_key" {}
 
 variable "bastion_ad_index" {
-  default = 2 
+  default = 2
 }
 
 variable "slurm_fs_ip" {
   default = ""
+}
+variable "enable_nis" {
+  default = "true"
+}
+variable "enable_ldap" {
+  default = "false"
 }

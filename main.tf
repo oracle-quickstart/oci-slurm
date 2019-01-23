@@ -15,26 +15,31 @@ module "slurm-control" {
   slurm_fs_ip          = "${var.slurm_fs_ip}"
   bastion_host         = "${var.bastion_host}"
   bastion_user         = "${var.bastion_user}"
-  bastion_private_key  = "${var.bastion_private_key}" 
+  bastion_private_key  = "${var.bastion_private_key}"
 }
 
 ############################################
 # Setup Slurm Auth Node
 ############################################
 module "slurm-auth" {
-  source               = "./modules/slurm-auth"
-  availability_domain  = "${var.control_ad}"
-  compartment_ocid     = "${var.compartment_ocid}"
-  auth_display_name = "${var.auth_display_name}"
-  image_id             = "${var.control_image_id}"
-  shape                = "${var.control_shape}"
-  subnet_id            = "${var.control_subnet_id}"
-  ssh_authorized_keys  = "${var.ssh_authorized_keys}"
-  ssh_private_key      = "${var.ssh_private_key}"
-  user_data            = "${var.control_user_data}"
-  bastion_host         = "${var.bastion_host}"
-  bastion_user         = "${var.bastion_user}"
-  bastion_private_key  = "${var.bastion_private_key}"
+  source                   = "./modules/slurm-auth"
+  availability_domain      = "${var.control_ad}"
+  compartment_ocid         = "${var.compartment_ocid}"
+  auth_display_name        = "${var.auth_display_name}"
+  image_id                 = "${var.control_image_id}"
+  shape                    = "${var.control_shape}"
+  subnet_id                = "${var.auth_subnet_id}"
+  ssh_authorized_keys      = "${var.ssh_authorized_keys}"
+  ssh_private_key          = "${var.ssh_private_key}"
+  user_data                = "${var.control_user_data}"
+  bastion_host             = "${var.bastion_host}"
+  bastion_user             = "${var.bastion_user}"
+  bastion_private_key      = "${var.bastion_private_key}"
+  enable_nis               = "${var.enable_nis}"
+  enable_ldap              = "${var.enable_ldap}"
+  control_private_ip       = "${module.slurm-control.private_ip}"
+  compute_node_private_ips = "${module.slurm-compute.private_ips}"
+  compute_count            = "${var.compute_count}"
 }
 
 ############################################
@@ -68,7 +73,7 @@ data "template_file" "config_slurm" {
   vars = {
     control_ip        = "${module.slurm-control.private_ip}"
     control_hostname  = "${module.slurm-control.host_name}"
-    slurm_fs_ip          = "${var.slurm_fs_ip}"
+    slurm_fs_ip       = "${var.slurm_fs_ip}"
     compute_ips       = "${join(",", module.slurm-compute.private_ips)}"
     compute_hostnames = "${join(",", module.slurm-compute.host_names)}"
   }
