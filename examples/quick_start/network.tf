@@ -307,15 +307,6 @@ resource "oci_core_security_list" "NISPrivateSeclist" {
     },
     {
       udp_options {
-        "max" = 944
-        "min" = 944
-      }
-
-      protocol = "17"
-      source   = "0.0.0.0/0"
-    },
-    {
-      udp_options {
         "max" = 111
         "min" = 111
       }
@@ -334,17 +325,8 @@ resource "oci_core_security_list" "NISPrivateSeclist" {
     },
     {
       udp_options {
-        "max" = 945
-        "min" = 945
-      }
-
-      protocol = "17"
-      source   = "0.0.0.0/0"
-    },
-    {
-      udp_options {
         "max" = 946
-        "min" = 946
+        "min" = 944
       }
 
       protocol = "17"
