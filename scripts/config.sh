@@ -31,6 +31,8 @@ sudo echo "include /mnt/shared/apps/slurm/slurm.conf" >> /etc/slurm/slurm.conf
 sudo chmod 777  /etc/hosts
 sudo cat /mnt/shared/hosts >> /etc/hosts
 
+sudo cat /mnt/shared/authorized_keys  >> /home/opc/.ssh/authorized_keys
+
 # To start Slurm node daemon
 if [ "$1" = "compute" ]
 then
@@ -48,6 +50,39 @@ fi
 # To start Slurm control daemon
 if [ "$1" = "control" ]
 then
+### create /u01/HPC-Agent/hpc_agent.cfg
+    touch ${slurm_fs_ip}
+    sudo mkdir /u01/HPC-Agent/
+    sudo chmod 777 /u01/HPC-Agent/
+    sudo touch /u01/HPC-Agent/hpc_agent.cfg
+    sudo chmod 777 /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo "{" >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"SchedulerType\": \"slurm\"," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"SchedulerVersion\": \"18.08.4\"," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"SchedulerApiVersion\": \"18.08\"," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"AgentDaemonPidFilePath\": \"/tmp/agent-daemon.pid\"," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"AgentDaemonLogFilePath\": \"/tmp/agent-daemon.log\"," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"ClusterID\": \"1\" ," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"MQURL\": \"\" ," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"MQTopicID\": \"\"," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"MQCredential\": \"\" ," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"AccountServer\": \"${auth_ip}\" ," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"AccountServerType\": \"nis\" ," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"ClusterUserHome\": \"/UserHome\" ," >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo " \"SudoGroupName\": \"sudogroup\"" >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo echo "}" >> /u01/HPC-Agent/hpc_agent.cfg
+
+### create message folders under HPC-Jobs directory
+    sudo mkdir -p /u01/HPC-Jobs/ArchievedMessages
+    sudo mkdir -p /u01/HPC-Jobs/GHostnameDemo
+    sudo mkdir -p /u01/HPC-Jobs/MessageOutput
+    sudo mkdir -p /u01/HPC-Jobs/Messages
+
+    sudo chown opc:opc /u01/HPC-Jobs/ArchievedMessages
+    sudo chown opc:opc /u01/HPC-Jobs/GHostnameDemo
+    sudo chown opc:opc /u01/HPC-Jobs/MessageOutput
+    sudo chown opc:opc /u01/HPC-Jobs/Messages
+
     sudo echo "ReturnToService=2" >> /home/opc/config
     sudo mkdir -p /mnt/shared/apps/slurm/
     sudo cp /home/opc/config /mnt/shared/apps/slurm/slurm.conf

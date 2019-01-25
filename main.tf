@@ -76,6 +76,7 @@ data "template_file" "config_slurm" {
     slurm_fs_ip       = "${var.slurm_fs_ip}"
     compute_ips       = "${join(",", module.slurm-compute.private_ips)}"
     compute_hostnames = "${join(",", module.slurm-compute.host_names)}"
+    auth_ip  = "${module.slurm-auth.private_ip}"
   }
 }
 
@@ -151,38 +152,29 @@ resource "null_resource" "control" {
   triggers {
     compute_hostnames = "${join(" ", module.slurm-compute.host_names)}"
   }
+
+  connection = {
+    host        = "${module.slurm-control.private_ip}"
+    agent       = false
+    timeout     = "10m"
+    user        = "opc"
+    private_key = "${file("${var.ssh_private_key}")}"
+    bastion_host        = "${var.bastion_host}"
+    bastion_user        = "${var.bastion_user}"
+    bastion_private_key = "${file("${var.bastion_private_key}")}"
+  }
+
   provisioner "file" {
-    connection = {
-      host        = "${module.slurm-control.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
     source      = "${path.module}/scripts/slurm.conf.tmp"
     destination = "~/slurm.conf.tmp"
   }
   provisioner "file" {
-    connection = {
-      host        = "${module.slurm-control.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
     content     = "${data.template_file.config_slurm.rendered}"
     destination = "~/config.sh"
   }
   provisioner "remote-exec" {
-    connection = {
-      host        = "${module.slurm-control.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
     inline = [
       "chmod +x ~/config.sh",

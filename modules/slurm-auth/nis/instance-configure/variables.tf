@@ -47,3 +47,8 @@ variable "enable_nis" {
 variable "enable_ldap" {
   default = "false"
 }
+
+variable "slurm_fs_ip" {
+  default = ""
+}
+

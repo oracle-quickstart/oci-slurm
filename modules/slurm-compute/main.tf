@@ -144,6 +144,7 @@ resource "oci_core_instance" "slurm_compute" {
     inline = [
       "chmod 600 ~/tmp.key",
       "chmod +x ~/install_slurm_node.sh",
+      "sudo yes \"y\" | ssh-keygen -N \"\" -f ~/.ssh/id_rsa",
       "~/install_slurm_node.sh",
     ]
   }

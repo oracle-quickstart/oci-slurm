@@ -117,8 +117,11 @@ sudo chmod 777 /home/opc/getfsipaddr
 cat ipaddr2 |  egrep -o "([0-9]{1,3}.){3}[0-9]" >> ipaddr3
 ip=`cat ipaddr3`
 sudo mount.nfs  $ip:/shared /mnt/shared
-sudo cp /home/opc/.ssh/id_rsa.pub /mnt/shared/
-sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
+
+sudo touch /mnt/shared/authorized_keys
+sudo chmod 777  /mnt/shared/authorized_keys
+sudo cat /home/opc/.ssh/id_rsa.pub >>  /mnt/shared/authorized_keys
+#sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
 sudo chmod 777 installmpi
 #./installmpi
 sudo touch /mnt/shared/hosts
