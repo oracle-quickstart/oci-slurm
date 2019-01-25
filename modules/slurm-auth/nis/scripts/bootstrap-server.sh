@@ -10,6 +10,7 @@
 exec &> bootstrap-server-logfile.txt
 set -x
 
+sudo touch ${slurm_fs_ip}
 export enable_nis="${enable_nis}"
 echo "enable_nis is $enable_nis"
 

@@ -83,6 +83,11 @@ then
     sudo chown opc:opc /u01/HPC-Jobs/MessageOutput
     sudo chown opc:opc /u01/HPC-Jobs/Messages
 
+## per ericyu, install these two packets
+    sudo yum install -y python2-pip
+    sudo pip install paramiko
+
+
     sudo echo "ReturnToService=2" >> /home/opc/config
     sudo mkdir -p /mnt/shared/apps/slurm/
     sudo cp /home/opc/config /mnt/shared/apps/slurm/slurm.conf
