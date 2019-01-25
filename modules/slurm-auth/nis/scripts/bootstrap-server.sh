@@ -28,7 +28,7 @@ export nis_sudo_group_name="${nis_sudo_group_name}"
 echo "nis_sudo_group_name is $nis_sudo_group_name"
 
 
-yum -y install ypserv-2.31-11.el7.x86_64 rpcbind-0.2.0-47.el7.x86_64 expect-5.45-14.el7_1.x86_64
+yum -y install nfs-utils ypserv-2.31-11.el7.x86_64 rpcbind-0.2.0-47.el7.x86_64 expect-5.45-14.el7_1.x86_64
 this_hostname=`hostname -f`
 echo $this_hostname
 
