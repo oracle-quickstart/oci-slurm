@@ -40,6 +40,7 @@ module "slurm-auth" {
   control_private_ip       = "${module.slurm-control.private_ip}"
   compute_node_private_ips = "${module.slurm-compute.private_ips}"
   compute_count            = "${var.compute_count}"
+  slurm_fs_ip          = "${var.slurm_fs_ip}"
 }
 
 ############################################
