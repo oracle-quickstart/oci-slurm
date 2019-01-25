@@ -100,7 +100,8 @@ sudo mount.nfs  $ip:/shared /mnt/shared
 sudo chmod 777 installmpi
 #./installmpi
 sudo date >> recordtime
-sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
+#sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
+sudo cat /home/opc/.ssh/id_rsa.pub >>  /mnt/shared/authorized_keys
 sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts
 
 #sudo  mount.nfs $ip:/home/ /home/

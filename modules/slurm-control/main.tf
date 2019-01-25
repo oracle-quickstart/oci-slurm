@@ -81,6 +81,12 @@ resource "oci_core_instance" "slurm_control" {
     destination = "~/installmpi"
   }
 
+  provisioner "file" {
+
+    source      = "${var.ssh_private_key}"
+    destination = "~/id_rsa_oci"
+  }
+
   provisioner "remote-exec" {
 
     inline = [

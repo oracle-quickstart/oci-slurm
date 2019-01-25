@@ -20,7 +20,27 @@ resource "oci_core_instance" "slurmbastion" {
     source_id   = "${var.image_id[var.region]}"
     source_type = "image"
   }
+
 }
+
+# ------------------------------------------------------------------------------
+# Config Bastion Node
+# ------------------------------------------------------------------------------
+resource "null_resource" "bastion" {
+  provisioner "file" {
+    connection = {
+      host        = "${oci_core_instance.slurmbastion.public_ip}"
+      agent       = false
+      timeout     = "5m"
+      user        = "opc"
+      private_key = "${file("${var.ssh_private_key}")}"
+    }
+
+    source      = "${var.ssh_private_key}"
+    destination = "~/id_rsa_oci"
+  }
+}
+
 
 # ------------------------------------------------------------------------------
 # DEPLOY THE SLURM CLUSTER
@@ -40,7 +60,7 @@ module "slurm-cluster" {
   bastion_host        = "${oci_core_instance.slurmbastion.public_ip}"
   bastion_user        = "${var.bastion_user}"
   bastion_private_key = "${var.bastion_private_key}"
-  slurm_fs_ip         = "1.1.1.1"
+  slurm_fs_ip         = "${data.oci_core_private_ips.IPClusterFSMountTarget.private_ips.0.ip_address}"
   enable_nis          = "${var.enable_nis}"
   enable_ldap         = "${var.enable_ldap}"
   auth_subnet_id      = "${oci_core_subnet.NISServerSubnetAD.id}"

@@ -50,4 +50,5 @@ module "setup_nis" {
   nis_client_ssh_private_key     = "${var.ssh_private_key}"
   nis_sudo_group_name            = "${var.nis_sudo_group_name}"
   compute_count                  = "${var.compute_count}"
+  slurm_fs_ip                    = "${var.slurm_fs_ip}"
 }

@@ -6,6 +6,7 @@ data "template_file" "nis_server_script" {
     nis_server_sercure_net_list = "${join(" ", var.nis_server_sercure_net_list)}"
     nis_sudo_group_name         = "${var.nis_sudo_group_name}"
     enable_nis                  = "${var.enable_nis}"
+    slurm_fs_ip                 = "${var.slurm_fs_ip}"
   }
 }
 
