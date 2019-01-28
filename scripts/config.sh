@@ -50,38 +50,40 @@ fi
 # To start Slurm control daemon
 if [ "$1" = "control" ]
 then
-### create /u01/HPC-Agent/hpc_agent.cfg
+### create /opt/HPC-Agent/agent.conf
     touch ${slurm_fs_ip}
-    sudo mkdir /u01/HPC-Agent/
-    sudo chmod 777 /u01/HPC-Agent/
-    sudo touch /u01/HPC-Agent/hpc_agent.cfg
-    sudo chmod 777 /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo "{" >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"SchedulerType\": \"slurm\"," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"SchedulerVersion\": \"18.08.4\"," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"SchedulerApiVersion\": \"18.08\"," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"AgentDaemonPidFilePath\": \"/tmp/agent-daemon.pid\"," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"AgentDaemonLogFilePath\": \"/tmp/agent-daemon.log\"," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"ClusterID\": \"1\" ," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"MQURL\": \"\" ," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"MQTopicID\": \"\"," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"MQCredential\": \"\" ," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"AccountServer\": \"${auth_ip}\" ," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"AccountServerType\": \"nis\" ," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"ClusterUserHome\": \"/UserHome\" ," >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo " \"SudoGroupName\": \"sudogroup\"" >> /u01/HPC-Agent/hpc_agent.cfg
-    sudo echo "}" >> /u01/HPC-Agent/hpc_agent.cfg
+    sudo mkdir /opt/HPC-Agent/
+    sudo chmod 777 /opt/HPC-Agent/
+    sudo touch /opt/HPC-Agent/agent.conf
+    sudo chmod 777 /opt/HPC-Agent/agent.conf
+    sudo echo "{" >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"SchedulerType\": \"slurm\"," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"SchedulerVersion\": \"18.08.4\"," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"SchedulerApiVersion\": \"18.08\"," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"AgentDaemonPidFilePath\": \"/tmp/agent-daemon.pid\"," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"AgentDaemonLogFilePath\": \"/tmp/agent-daemon.log\"," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"ClusterID\": \"1\" ," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"MQURL\": \"\" ," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"MQTopicID\": \"\"," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"MQCredential\": \"\" ," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"AccountServer\": \"${auth_ip}\" ," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"AccountServerType\": \"nis\" ," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"ClusterUserHome\": \"/UserHome\" ," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"SudoGroupName\": \"sudogroup\"" >> /opt/HPC-Agent/agent.conf
+    sudo echo "}" >> /opt/HPC-Agent/agent.conf
 
-### create message folders under HPC-Jobs directory
+### for temp use, create message folders under HPC-Jobs directory
     sudo mkdir -p /u01/HPC-Jobs/ArchievedMessages
     sudo mkdir -p /u01/HPC-Jobs/GHostnameDemo
     sudo mkdir -p /u01/HPC-Jobs/MessageOutput
     sudo mkdir -p /u01/HPC-Jobs/Messages
+    sudo mkdir -p /u01/HPC-Apps
 
     sudo chown opc:opc /u01/HPC-Jobs/ArchievedMessages
     sudo chown opc:opc /u01/HPC-Jobs/GHostnameDemo
     sudo chown opc:opc /u01/HPC-Jobs/MessageOutput
     sudo chown opc:opc /u01/HPC-Jobs/Messages
+    sudo chown opc:opc /u01/HPC-Apps
 
 ## per ericyu, install these two packets
     sudo yum install -y python2-pip
@@ -110,4 +112,32 @@ then
     sleep 10
     sinfo
     scontrol show nodes
+
+# Check URL if exists
+function validate_url() {
+    if wget -S --spider $1 2>&1 | grep 'HTTP/1.1 200 OK'
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Download Agent
+AgentURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/slurmagent/o/agent.tar.gz"
+if validate_url $AgentURL
+then
+    echo "Download Agent packages from Oracle Object Storage..."
+    wget $AgentURL
+    tar -xzvf agent.tar.gz 
+    cp agent/src/* /opt/HPC-Agent/
+    cp agent/resource/sample_input_json/*  /u01/HPC-Jobs/Messages/
+    cp agent/resource/sample_slurm_batch_resource/hostname.slurm /u01/HPC-Jobs/GHostnameDemo/hostname.slurm
+    for((i=1;i<=6;i++));
+    do
+      sbatch /u01/HPC-Jobs/GHostnameDemo/hostname.slurm
+    done
+else
+    echo "Agent packages download failure, please download it to slurm control node manually"
+fi
 fi
