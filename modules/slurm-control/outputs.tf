@@ -9,4 +9,3 @@ output "private_ip" {
 output "host_name" {
   value = "${oci_core_instance.slurm_control.display_name}"
 }
-

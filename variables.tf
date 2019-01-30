@@ -44,7 +44,7 @@ variable "control_user_data" {
 
 variable "compute_count" {
   description = "Number of compute instances to launch. "
-  default     = 1
+  default     = 2
 }
 
 variable "compute_ad" {
@@ -89,3 +89,22 @@ variable "bastion_user" {
 variable "bastion_private_key" {
   description = "The private key path to access the bastion host."
 }
+
+variable "slurm_fs_ip" {
+  description = "The fs ip."
+}
+
+variable "auth_display_name" {
+  description = "The name of the auth instance. "
+  default     = "slurmauth"
+}
+
+variable "enable_nis" {
+  default = "true"
+}
+
+variable "enable_ldap" {
+  default = "false"
+}
+
+variable "auth_subnet_id" {}
