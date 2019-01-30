@@ -3,8 +3,17 @@ data "template_file" "execution" {
 
   vars = {
     control_ip    = "${var.slurm_control_ip}"
+    slurm_fs_ip   = "${var.slurm_fs_ip}"
     slurm_version = "${var.slurm_version}"
   }
+}
+
+data "template_file" "scpipaddr" {
+  template = "${file("${path.module}/scripts/scpipaddr")}"
+}
+
+data "template_file" "installmpi" {
+  template = "${file("${path.module}/scripts/installmpi")}"
 }
 
 resource "oci_core_instance" "slurm_compute" {
@@ -64,8 +73,59 @@ resource "oci_core_instance" "slurm_compute" {
       bastion_private_key = "${file("${var.bastion_private_key}")}"
     }
 
+    content     = "${data.template_file.scpipaddr.rendered}"
+    destination = "~/scpipaddr"
+  }
+
+  provisioner "file" {
+    connection = {
+      host        = "${self.private_ip}"
+      agent       = false
+      timeout     = "5m"
+      user        = "opc"
+      private_key = "${file("${var.ssh_private_key}")}"
+
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
+    }
+
+    content     = "${data.template_file.installmpi.rendered}"
+    destination = "~/installmpi"
+  }
+
+  provisioner "file" {
+    connection = {
+      host        = "${self.private_ip}"
+      agent       = false
+      timeout     = "5m"
+      user        = "opc"
+      private_key = "${file("${var.ssh_private_key}")}"
+
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
+    }
+
     source      = "${var.ssh_private_key}"
     destination = "~/tmp.key"
+  }
+
+  provisioner "file" {
+    connection = {
+      host        = "${self.private_ip}"
+      agent       = false
+      timeout     = "5m"
+      user        = "opc"
+      private_key = "${file("${var.ssh_private_key}")}"
+
+      bastion_host        = "${var.bastion_host}"
+      bastion_user        = "${var.bastion_user}"
+      bastion_private_key = "${file("${var.bastion_private_key}")}"
+    }
+
+    source      = "${var.ssh_private_key}"
+    destination = "~/id_rsa_oci6"
   }
 
   provisioner "remote-exec" {
@@ -84,6 +144,7 @@ resource "oci_core_instance" "slurm_compute" {
     inline = [
       "chmod 600 ~/tmp.key",
       "chmod +x ~/install_slurm_node.sh",
+      "sudo yes \"y\" | ssh-keygen -N \"\" -f ~/.ssh/id_rsa",
       "~/install_slurm_node.sh",
     ]
   }

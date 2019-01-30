@@ -11,6 +11,10 @@ variable "vcn_cidr" {
   default = "10.0.0.0/16"
 }
 
+variable "ExportPathFS" {
+  default = "/shared"
+}
+
 locals {
   // contains bastion and anything internet-facing
   dmz_tier_prefix = "${cidrsubnet("${var.vcn_cidr}", 2, 0)}"
@@ -19,9 +23,10 @@ locals {
   app_tier_prefix = "${cidrsubnet("${var.vcn_cidr}", 2, 1)}"
 
   bastion_subnet_prefix = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 0)}"
-  control_subnet_prefix  = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 1)}"
+  control_subnet_prefix = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 1)}"
 
-  compute_subnet_prefix   = "${cidrsubnet("${local.app_tier_prefix}", 2, 0)}"
+  compute_subnet_prefix = "${cidrsubnet("${local.app_tier_prefix}", 2, 0)}"
+  auth_subnet_prefix    = "${cidrsubnet("${local.app_tier_prefix}", 2, 1)}"
 }
 
 variable "label_prefix" {
@@ -64,4 +69,16 @@ variable "bastion_private_key" {}
 
 variable "bastion_ad_index" {
   default = 2
+}
+
+variable "slurm_fs_ip" {
+  default = ""
+}
+
+variable "enable_nis" {
+  default = "true"
+}
+
+variable "enable_ldap" {
+  default = "false"
 }

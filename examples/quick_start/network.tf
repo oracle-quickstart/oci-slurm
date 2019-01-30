@@ -52,7 +52,6 @@ resource "oci_core_route_table" "private" {
   }
 }
 
-
 ############################################
 # Create Security List
 ############################################
@@ -72,14 +71,13 @@ resource "oci_core_security_list" "slurmnat" {
   }]
 }
 
-
 resource "oci_core_security_list" "slurmnode" {
   compartment_id = "${var.compartment_ocid}"
   display_name   = "slurmcnode"
   vcn_id         = "${oci_core_virtual_network.slurmvcn.id}"
 
   egress_security_rules = [{
-    protocol    = "6"
+    protocol    = "all"
     destination = "0.0.0.0/0"
   }]
 
@@ -108,6 +106,136 @@ resource "oci_core_security_list" "slurmnode" {
       }
 
       protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "63000"
+        "min" = "60001"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "2050"
+        "min" = "2048"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "111"
+        "min" = "111"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = "111"
+        "min" = "111"
+      }
+
+      protocol = "17"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = "2050"
+        "min" = "2048"
+      }
+
+      protocol = "17"
+      source   = "0.0.0.0/0"
+    },
+  ]
+}
+
+resource "oci_core_security_list" "slurmcomputenode" {
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "slurmcnode"
+  vcn_id         = "${oci_core_virtual_network.slurmvcn.id}"
+
+  egress_security_rules = [{
+    protocol    = "all"
+    destination = "0.0.0.0/0"
+  }]
+
+  ingress_security_rules = [{
+    tcp_options {
+      "max" = 22
+      "min" = 22
+    }
+
+    protocol = "6"
+    source   = "0.0.0.0/0"
+  },
+    {
+      tcp_options {
+        "max" = "6819"
+        "min" = "6817"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "7312"
+        "min" = "7312"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "63000"
+        "min" = "60001"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "2050"
+        "min" = "2048"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = "111"
+        "min" = "111"
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = "111"
+        "min" = "111"
+      }
+
+      protocol = "17"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = "2050"
+        "min" = "2048"
+      }
+
+      protocol = "17"
       source   = "0.0.0.0/0"
     },
   ]
@@ -140,6 +268,79 @@ resource "oci_core_security_list" "slurmbastion" {
 }
 
 ############################################
+# Create NIS Server Security List
+############################################
+resource "oci_core_security_list" "NISPrivateSeclist" {
+  compartment_id = "${var.compartment_ocid}"
+  display_name   = "PrivateSeclist"
+  vcn_id         = "${oci_core_virtual_network.slurmvcn.id}"
+
+  egress_security_rules = [
+    {
+      protocol    = "all"
+      destination = "0.0.0.0/0"
+    },
+  ]
+
+  ingress_security_rules = [
+    {
+      tcp_options {
+        "max" = 22
+        "min" = 22
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = 944
+        "min" = 944
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = 111
+        "min" = 111
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = 111
+        "min" = 111
+      }
+
+      protocol = 17
+      source   = "0.0.0.0/0"
+    },
+    {
+      tcp_options {
+        "max" = 945
+        "min" = 945
+      }
+
+      protocol = "6"
+      source   = "0.0.0.0/0"
+    },
+    {
+      udp_options {
+        "max" = 946
+        "min" = 944
+      }
+
+      protocol = "17"
+      source   = "0.0.0.0/0"
+    },
+  ]
+}
+
+############################################
 # Create Slurm Control Subnet
 ############################################
 resource "oci_core_subnet" "slurmcontrol" {
@@ -162,7 +363,7 @@ resource "oci_core_subnet" "slurmcompute" {
   cidr_block          = "${cidrsubnet("${local.compute_subnet_prefix}", 4, 0)}"
   display_name        = "slurmcompute"
   dns_label           = "slurmcompute"
-  security_list_ids   = ["${oci_core_security_list.slurmnode.id}"]
+  security_list_ids   = ["${oci_core_security_list.slurmcomputenode.id}"]
   compartment_id      = "${var.compartment_ocid}"
   vcn_id              = "${oci_core_virtual_network.slurmvcn.id}"
   route_table_id      = "${oci_core_route_table.private.id}"
@@ -181,4 +382,22 @@ resource "oci_core_subnet" "slurmbastion" {
   vcn_id              = "${oci_core_virtual_network.slurmvcn.id}"
   route_table_id      = "${oci_core_route_table.public.id}"
   dhcp_options_id     = "${oci_core_virtual_network.slurmvcn.default_dhcp_options_id}"
+}
+
+############################################
+# Create NIS Server Subnet
+############################################
+resource "oci_core_subnet" "NISServerSubnetAD" {
+  availability_domain = "${data.template_file.ad_names.*.rendered[0]}"
+  cidr_block          = "${cidrsubnet("${local.auth_subnet_prefix}", 4, 0)}"
+  display_name        = "NISServerSubnetAD"
+  compartment_id      = "${var.compartment_ocid}"
+  vcn_id              = "${oci_core_virtual_network.slurmvcn.id}"
+  route_table_id      = "${oci_core_route_table.private.id}"
+
+  security_list_ids = [
+    "${oci_core_security_list.NISPrivateSeclist.id}",
+  ]
+
+  dns_label = "nisserver"
 }
