@@ -75,4 +75,3 @@ variable "bastion_private_key" {
 variable "slurm_fs_ip" {
   default = ""
 }
-

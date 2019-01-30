@@ -29,7 +29,7 @@ variable "shape" {
 
 variable "assign_public_ip" {
   description = "Whether the VNIC should be assigned a public IP address."
-  default     = true
+  default     = false
 }
 
 variable "ssh_authorized_keys" {

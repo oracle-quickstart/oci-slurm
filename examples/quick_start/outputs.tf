@@ -14,6 +14,6 @@ output "slurm_fs_ip" {
   value = "${data.oci_core_private_ips.IPClusterFSMountTarget.private_ips.0.ip_address}"
 }
 
-output "bastion_host"{
+output "bastion_host" {
   value = "${oci_core_instance.slurmbastion.public_ip}"
 }

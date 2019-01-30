@@ -3,7 +3,7 @@ data "template_file" "execution" {
 
   vars = {
     control_ip    = "${var.slurm_control_ip}"
-    slurm_fs_ip =     "${var.slurm_fs_ip}" 
+    slurm_fs_ip   = "${var.slurm_fs_ip}"
     slurm_version = "${var.slurm_version}"
   }
 }
