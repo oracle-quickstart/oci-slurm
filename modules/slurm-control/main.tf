@@ -2,12 +2,21 @@ data "template_file" "execution" {
   template = "${file("${path.module}/scripts/setup.sh")}"
 
   vars {
+    slurm_fs_ip   = "${var.slurm_fs_ip}"
     slurm_version = "${var.slurm_version}"
   }
 }
 
 data "template_file" "dbconfig" {
   template = "${file("${path.module}/scripts/slurmdbd.conf.tmp")}"
+}
+
+data "template_file" "getfsipaddr" {
+  template = "${file("${path.module}/scripts/getfsipaddr")}"
+}
+
+data "template_file" "installmpi" {
+  template = "${file("${path.module}/scripts/installmpi")}"
 }
 
 resource "oci_core_instance" "slurm_control" {
@@ -36,52 +45,46 @@ resource "oci_core_instance" "slurm_control" {
     create = "10m"
   }
 
-  provisioner "file" {
-    connection = {
-      host        = "${self.private_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-      bastion_host        = "${var.bastion_host}"
-      bastion_user        = "${var.bastion_user}"
-      bastion_private_key = "${file("${var.bastion_private_key}")}"
-    }
+  connection = {
+    host                = "${self.private_ip}"
+    agent               = false
+    timeout             = "10m"
+    user                = "opc"
+    private_key         = "${file("${var.ssh_private_key}")}"
+    bastion_host        = "${var.bastion_host}"
+    bastion_user        = "${var.bastion_user}"
+    bastion_private_key = "${file("${var.bastion_private_key}")}"
+  }
 
+  provisioner "file" {
     content     = "${data.template_file.execution.rendered}"
     destination = "~/install_slurm.sh"
   }
 
   provisioner "file" {
-    connection = {
-      host        = "${self.private_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-      bastion_host        = "${var.bastion_host}"
-      bastion_user        = "${var.bastion_user}"
-      bastion_private_key = "${file("${var.bastion_private_key}")}"
-    }
-
     content     = "${data.template_file.dbconfig.rendered}"
     destination = "~/slurmdbd.conf.tmp"
   }
 
-  provisioner "remote-exec" {
-    connection = {
-      host        = "${self.private_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-      bastion_host        = "${var.bastion_host}"
-      bastion_user        = "${var.bastion_user}"
-      bastion_private_key = "${file("${var.bastion_private_key}")}"
-    }
+  provisioner "file" {
+    content     = "${data.template_file.getfsipaddr.rendered}"
+    destination = "~/getfsipaddr"
+  }
 
+  provisioner "file" {
+    content     = "${data.template_file.installmpi.rendered}"
+    destination = "~/installmpi"
+  }
+
+  provisioner "file" {
+    source      = "${var.ssh_private_key}"
+    destination = "~/id_rsa_oci"
+  }
+
+  provisioner "remote-exec" {
     inline = [
       "chmod +x ~/install_slurm.sh",
+      "sudo yes \"y\" | ssh-keygen -N \"\" -f ~/.ssh/id_rsa",
       "~/install_slurm.sh",
     ]
   }
