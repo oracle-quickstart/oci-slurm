@@ -106,8 +106,12 @@ sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts
 
 #sudo  mount.nfs $ip:/home/ /home/
 sudo mkdir /u01
-sudo  mount.nfs $ip:/u01/ /u01/
+#sudo  mount.nfs $ip:/u01/ /u01/
 sudo mkdir /UserHome
-sudo  mount.nfs $ip:/UserHome /UserHome
+#sudo  mount.nfs $ip:/UserHome /UserHome
+sudo chmod 777 /etc/fstab
+sudo echo "$ip:/u01 /u01 nfs" >> /etc/fstab
+sudo echo "$ip:/UserHome /UserHome nfs" >> /etc/fstab
+sudo mount -a
 
 sudo firewall-cmd --reload
