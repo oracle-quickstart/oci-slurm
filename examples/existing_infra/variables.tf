@@ -19,9 +19,9 @@ locals {
   app_tier_prefix = "${cidrsubnet("${var.vcn_cidr}", 2, 1)}"
 
   bastion_subnet_prefix = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 0)}"
-  control_subnet_prefix  = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 1)}"
+  control_subnet_prefix = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 1)}"
 
-  compute_subnet_prefix   = "${cidrsubnet("${local.app_tier_prefix}", 2, 0)}"
+  compute_subnet_prefix = "${cidrsubnet("${local.app_tier_prefix}", 2, 0)}"
 }
 
 variable "label_prefix" {

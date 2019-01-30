@@ -12,8 +12,9 @@ function validate_url() {
     fi
 }
 
+
 # Installing required bits and bobs
-sudo yum install -y munge-devel munge-libs readline-devel perl-ExtUtils-MakeMaker openssl-devel pam-devel rpm-build gcc perl-DBI perl-Switch munge mariadb-devel
+sudo yum install -y nfs-utils munge-devel munge-libs readline-devel perl-ExtUtils-MakeMaker openssl-devel pam-devel rpm-build gcc perl-DBI perl-Switch munge mariadb-devel
 
 # Oracle Object Storage Slurm RPM URL
 OOSURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/SlurmPackage/o/slurm-${slurm_version}-rpm.tar.gz"
@@ -88,4 +89,48 @@ sudo firewall-cmd --permanent --zone=public --add-port=6817/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=6818/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=6819/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=7321/tcp
+sudo firewall-cmd --permanent --zone=public --add-port=60001-63000/tcp
+sudo firewall-cmd --permanent --zone=public --add-service=nfs 
+#sudo firewall-cmd --reload
+
+#install pyslurm
+sudo yum install Cython -y
+sudo yum install git -y
+sudo yum install python-devel -y
+wget https://github.com/PySlurm/pyslurm/archive/18.08.0.zip -q
+unzip 18.08.0.zip
+cd pyslurm-18.08.0
+sudo python setup.py build
+sudo python setup.py install
+cd -
+
+# install environment-modules
+sudo yum install environment-modules -y
+
+#sudo systemctl stop firewalld.service
+#sudo systemctl disable firewalld.service
+
+sudo mkdir /mnt/shared
+sudo chmod 777 /home/opc/getfsipaddr
+/home/opc/getfsipaddr
+cat ipaddr2 |  egrep -o "([0-9]{1,3}.){3}[0-9]" >> ipaddr3
+ip=`cat ipaddr3`
+sudo mount.nfs  $ip:/shared /mnt/shared
+
+sudo touch /mnt/shared/authorized_keys
+sudo chmod 777  /mnt/shared/authorized_keys
+sudo cat /home/opc/.ssh/id_rsa.pub >>  /mnt/shared/authorized_keys
+#sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
+sudo chmod 777 installmpi
+#./installmpi
+sudo touch /mnt/shared/hosts
+sudo chmod 777  /mnt/shared/hosts
+sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts
+
+#sudo  mount.nfs $ip:/home/ /home/
+sudo mkdir /u01
+sudo  mount.nfs $ip:/u01/ /u01/
+sudo mkdir /UserHome
+sudo  mount.nfs $ip:/UserHome /UserHome
+
 sudo firewall-cmd --reload

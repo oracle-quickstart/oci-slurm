@@ -1,0 +1,17 @@
+#! /usr/bin/bash
+
+sudo yum install expect gcc-c++ gcc-gfortran -y
+sudo wget http://www.mpich.org/static/downloads/1.5/mpich2-1.5.tar.gz
+mkdir mpich2-install
+sudo tar xzvf mpich2-1.5.tar.gz
+cd mpich2-1.5
+sudo ./configure --prefix=/home/opc/mpich2-install 2>&1 | sudo tee c.txt
+sudo make 2>&1 | sudo tee m.txt
+sudo make install 2>&1 | sudo tee mi.txt
+cd ~/
+touch profile
+sudo cat /etc/profile >> profile
+sudo echo "PATH=/home/opc/mpich2-install/bin:$PATH" >> profile
+sudo echo "export PATH" >> profile
+sudo mv -f /etc/profile /etc/profile.bak
+sudo cp profile /etc/profile
