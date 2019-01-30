@@ -124,6 +124,8 @@ function validate_url() {
 }
 
 # Download Agent
+# latest code:  git clone ssh://git@bitbucket.oci.oraclecorp.com:7999/bigc/agent.git
+# https://bitbucket.aka.lgl.grungy.us/projects/BIGC/repos/agent/browse
 AgentURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/slurmagent/o/agent.tar.gz"
 if validate_url $AgentURL
 then
@@ -133,10 +135,12 @@ then
     cp agent/src/* /opt/HPC-Agent/
     cp agent/resource/sample_input_json/*  /u01/HPC-Jobs/Messages/
     cp agent/resource/sample_slurm_batch_resource/hostname.slurm /u01/HPC-Jobs/GHostnameDemo/hostname.slurm
+    cp agent/resource/misc/App_deploy.sh  /u01/HPC-Apps/
     for((i=1;i<=6;i++));
     do
       sbatch /u01/HPC-Jobs/GHostnameDemo/hostname.slurm
     done
+    python /opt/HPC-Agent/agent_daemon.py start
 else
     echo "Agent packages download failure, please download it to slurm control node manually"
 fi
