@@ -13,7 +13,7 @@ data "template_file" "ad_names" {
 
 data "oci_core_private_ips" IPClusterFSMountTarget {
   count     = 1
-  subnet_id = "${oci_core_subnet.slurmcontrol.id}" 
+  subnet_id = "${oci_core_subnet.slurmcontrol.id}"
 
   filter {
     name   = "id"

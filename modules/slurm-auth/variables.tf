@@ -41,6 +41,7 @@ variable "ssh_private_key" {
   description = "The private key path to access instance. "
   default     = ""
 }
+
 variable "ssh_user" {
   description = "The user to access instance. "
   default     = "opc"
@@ -79,13 +80,16 @@ variable "nis_server_user" {
 variable "nis_domain_name" {
   default = "nis.oci.com"
 }
+
 variable "nis_sudo_group_name" {
   default = "sudogroup"
 }
+
 variable "nis_server_sercure_net_list" {
   type    = "list"
   default = []
 }
+
 variable "enable_nis" {
   default = "true"
 }
@@ -94,11 +98,12 @@ variable "enable_ldap" {
   default = "false"
 }
 
-variable "control_private_ip" {
-}
+variable "control_private_ip" {}
+
 variable "compute_node_private_ips" {
   type = "list"
 }
+
 variable "compute_count" {
   description = "Number of compute instances to launch. "
   default     = 2

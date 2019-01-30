@@ -23,10 +23,10 @@ locals {
   app_tier_prefix = "${cidrsubnet("${var.vcn_cidr}", 2, 1)}"
 
   bastion_subnet_prefix = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 0)}"
-  control_subnet_prefix  = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 1)}"
+  control_subnet_prefix = "${cidrsubnet("${local.dmz_tier_prefix}", 2, 1)}"
 
-  compute_subnet_prefix   = "${cidrsubnet("${local.app_tier_prefix}", 2, 0)}"
-  auth_subnet_prefix   = "${cidrsubnet("${local.app_tier_prefix}", 2, 1)}"
+  compute_subnet_prefix = "${cidrsubnet("${local.app_tier_prefix}", 2, 0)}"
+  auth_subnet_prefix    = "${cidrsubnet("${local.app_tier_prefix}", 2, 1)}"
 }
 
 variable "label_prefix" {
@@ -74,9 +74,11 @@ variable "bastion_ad_index" {
 variable "slurm_fs_ip" {
   default = ""
 }
+
 variable "enable_nis" {
   default = "true"
 }
+
 variable "enable_ldap" {
   default = "false"
 }
