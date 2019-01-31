@@ -102,8 +102,8 @@ sudo mkdir /u01
 sudo mkdir /UserHome
 #sudo  mount.nfs ${slurm_fs_ip}:/UserHome /UserHome
 sudo chmod 777 /etc/fstab
-sudo echo "$ip:/u01 /u01 nfs" >> /etc/fstab
-sudo echo "$ip:/UserHome /UserHome nfs" >> /etc/fstab
+sudo echo "${slurm_fs_ip}:/u01 /u01 nfs" >> /etc/fstab
+sudo echo "${slurm_fs_ip}:/UserHome /UserHome nfs" >> /etc/fstab
 sudo mount -a
 
 groupadd $nis_sudo_group_name
