@@ -73,11 +73,11 @@ resource "oci_core_security_list" "slurmnat" {
 
 resource "oci_core_security_list" "slurmcontrol" {
   compartment_id = "${var.compartment_ocid}"
-  display_name   = "slurmcnode"
+  display_name   = "slurmcontrolnode"
   vcn_id         = "${oci_core_virtual_network.slurmvcn.id}"
 
   egress_security_rules = [{
-    protocol    = "6"
+    protocol    = "all"
     destination = "0.0.0.0/0"
   }]
 
@@ -158,7 +158,7 @@ resource "oci_core_security_list" "slurmcontrol" {
 
 resource "oci_core_security_list" "slurmcomputenode" {
   compartment_id = "${var.compartment_ocid}"
-  display_name   = "slurmcnode"
+  display_name   = "slurmcomputenode"
   vcn_id         = "${oci_core_virtual_network.slurmvcn.id}"
 
   egress_security_rules = [{
