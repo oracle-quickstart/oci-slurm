@@ -26,17 +26,24 @@ resource "oci_core_instance" "slurmbastion" {
 # Config Bastion Node
 # ------------------------------------------------------------------------------
 resource "null_resource" "bastion" {
-  provisioner "file" {
-    connection = {
-      host        = "${oci_core_instance.slurmbastion.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
+  connection = {
+    host        = "${oci_core_instance.slurmbastion.public_ip}"
+    agent       = false
+    timeout     = "5m"
+    user        = "opc"
+    private_key = "${file("${var.ssh_private_key}")}"
+  }
+
+  provisioner "file" {
     source      = "${var.ssh_private_key}"
     destination = "~/id_rsa_oci"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 600 ~/id_rsa_oci",
+    ]
   }
 }
 

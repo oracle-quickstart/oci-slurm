@@ -23,7 +23,12 @@ do
 done
 
 #echo "PartitionName=debug Nodes="${compute_hostnames}" Default=YES MaxTime=INFINITE State=UP" >> /home/opc/slurm.conf.tmp
-echo "PartitionName=debug Nodes="${compute_hostnames}" Default=YES MaxTime=INFINITE State=UP" >> /home/opc/config
+#echo "PartitionName=debug Nodes="${compute_hostnames}" Default=YES MaxTime=INFINITE State=UP" >> /home/opc/config
+# per ericyu, change to ALL makes it easier to add or remove nodes
+echo "PartitionName=debug Nodes=ALL Default=YES MaxTime=INFINITE State=UP" >> /home/opc/config
+
+# per ericyu, make sure executed slurm job won’t be purged in a short period
+echo "MinJobAge=3600" >> /home/opc/config
 
 sudo mv /home/opc/slurm.conf.tmp /etc/slurm/slurm.conf
 sudo echo "include /mnt/shared/apps/slurm/slurm.conf" >> /etc/slurm/slurm.conf
@@ -59,7 +64,7 @@ then
     sudo echo "{" >> /opt/HPC-Agent/agent.conf
     sudo echo " \"SchedulerType\": \"slurm\"," >> /opt/HPC-Agent/agent.conf
     sudo echo " \"SchedulerVersion\": \"18.08.4\"," >> /opt/HPC-Agent/agent.conf
-    sudo echo " \"SchedulerApiVersion\": \"18.08\"," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"SchedulerApiVersion\": \"18.8\"," >> /opt/HPC-Agent/agent.conf
     sudo echo " \"AgentDaemonPidFilePath\": \"/tmp/agent-daemon.pid\"," >> /opt/HPC-Agent/agent.conf
     sudo echo " \"AgentDaemonLogFilePath\": \"/tmp/agent-daemon.log\"," >> /opt/HPC-Agent/agent.conf
     sudo echo " \"ClusterID\": \"1\" ," >> /opt/HPC-Agent/agent.conf
@@ -89,6 +94,9 @@ then
     sudo yum install -y python2-pip
     sudo pip install paramiko
 
+#  get cpu count and replace it in the config 
+    cpucount=`cat /proc/cpuinfo  | grep processor | wc -l`
+    sed -i "s/CPUs=2/CPUs=$cpucount/" /home/opc/config
 
     sudo echo "ReturnToService=2" >> /home/opc/config
     sudo mkdir -p /mnt/shared/apps/slurm/
@@ -127,6 +135,7 @@ function validate_url() {
 # latest code:  git clone ssh://git@REPO_FQDN:7999/bigc/agent.git
 # https://REPO_FQDN/projects/BIGC/repos/agent/browse
 AgentURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/slurmagent/o/agent.tar.gz"
+AppURL=""
 if validate_url $AgentURL
 then
     echo "Download Agent packages from Oracle Object Storage..."
@@ -140,6 +149,8 @@ then
     do
       sbatch /u01/HPC-Jobs/GHostnameDemo/hostname.slurm
     done
+    rm -f agent.tar.gz
+    rm -rf agent/
     python /opt/HPC-Agent/agent_daemon.py start
 else
     echo "Agent packages download failure, please download it to slurm control node manually"
