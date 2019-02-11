@@ -178,3 +178,37 @@ resource "null_resource" "control" {
     ]
   }
 }
+
+############################################
+# Config Slurm Auth Node
+############################################
+resource "null_resource" "auth" {
+  depends_on = ["null_resource.compute"]
+
+  # Changes to any instance of the compute node requires re-provisioning
+
+  triggers {
+    compute_hostnames = "${join(" ", module.slurm-compute.host_names)}"
+  }
+  connection = {
+    host                = "${module.slurm-auth.private_ip}"
+    agent               = false
+    timeout             = "10m"
+    user                = "opc"
+    private_key         = "${file("${var.ssh_private_key}")}"
+    bastion_host        = "${var.bastion_host}"
+    bastion_user        = "${var.bastion_user}"
+    bastion_private_key = "${file("${var.bastion_private_key}")}"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_slurm.rendered}"
+    destination = "~/config.sh"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x ~/config.sh",
+      "~/config.sh auth",
+    ]
+  }
+}

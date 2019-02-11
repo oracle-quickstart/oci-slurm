@@ -1,5 +1,6 @@
 #!/bin/bash
 
+exec &> slurm_compute_setup.txt
 set -e -x
 
 # Check URL if exists

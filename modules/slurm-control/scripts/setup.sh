@@ -1,5 +1,5 @@
 #!/bin/bash
-
+exec &> slurm_control_setup.txt
 set -e -x
 
 # Check URL if exists

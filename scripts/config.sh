@@ -1,6 +1,14 @@
 #!/bin/bash
-
+exec &> slurm_config.txt
 set -e -x
+
+
+if [ "$1" = "auth" ]
+then
+   sudo cat /u01/authorized_keys  >> /home/opc/.ssh/authorized_keys
+   exit
+fi
+
 
 
 # Get Slurm compute node ip(s) and display name(s)
@@ -106,7 +114,7 @@ then
     sudo systemctl restart slurmctld.service
     sudo systemctl status slurmctld.service
     echo y |sudo sacctmgr add cluster ocihpc 
-    systemctl restart slurmdbd.service && sleep 10 && systemctl restart slurmctld.service  
+    sudo systemctl restart slurmdbd.service && sleep 10 && sudo systemctl restart slurmctld.service  
 
 #sudo sacctmgr add cluster ocihpc << EOF
 #y
