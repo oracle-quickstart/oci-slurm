@@ -143,8 +143,8 @@ function validate_url() {
 # latest code:  git clone ssh://git@bitbucket.oci.oraclecorp.com:7999/bigc/agent.git
 # https://bitbucket.aka.lgl.grungy.us/projects/BIGC/repos/agent/browse
 AgentURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/slurmagent/o/agent.tar.gz"
-AppURL=""
-if validate_url $AgentURL
+AppURL="https://objectstorage.us-ashburn-1.oraclecloud.com/n/m1-hpcapptest0103/b/AppDeploy/o/App_deploy.sh"
+if  validate_url $AgentURL && validate_url $AppURL 
 then
     echo "Download Agent packages from Oracle Object Storage..."
     wget $AgentURL
@@ -152,7 +152,9 @@ then
     cp agent/src/* /opt/HPC-Agent/
     cp agent/resource/sample_input_json/*  /u01/HPC-Jobs/Messages/
     cp agent/resource/sample_slurm_batch_resource/hostname.slurm /u01/HPC-Jobs/GHostnameDemo/hostname.slurm
-    cp agent/resource/misc/App_deploy.sh  /u01/HPC-Apps/
+    wget $AppURL
+    cp App_deploy.sh  /u01/HPC-Apps/
+#    cp agent/resource/misc/App_deploy.sh  /u01/HPC-Apps/
     for((i=1;i<=6;i++));
     do
       sbatch /u01/HPC-Jobs/GHostnameDemo/hostname.slurm
