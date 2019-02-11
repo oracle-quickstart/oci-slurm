@@ -106,6 +106,8 @@ sudo echo "${slurm_fs_ip}:/u01 /u01 nfs" >> /etc/fstab
 sudo echo "${slurm_fs_ip}:/UserHome /UserHome nfs" >> /etc/fstab
 sudo mount -a
 
+sudo cat /home/opc/.ssh/id_rsa.pub >>  /u01/authorized_keys
+
 groupadd $nis_sudo_group_name
 usermod -a -G $nis_sudo_group_name nistest
 id nistest
