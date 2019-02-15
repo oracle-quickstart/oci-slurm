@@ -46,11 +46,18 @@ sudo cat /mnt/shared/hosts >> /etc/hosts
 
 sudo cat /mnt/shared/authorized_keys  >> /home/opc/.ssh/authorized_keys
 
+sudo setsebool -P use_nfs_home_dirs 1
+
 # To start Slurm node daemon
 if [ "$1" = "compute" ]
 then
     sudo echo "ReturnToService=2" >> /home/opc/config
     sudo mkdir -p /mnt/shared/apps/slurm/
+
+#  get cpu count and replace it in the config 
+    cpucount=`cat /proc/cpuinfo  | grep processor | wc -l`
+    sed -i "s/CPUs=2/CPUs=$cpucount/g" /home/opc/config
+
     sudo cp /home/opc/config /mnt/shared/apps/slurm/slurm.conf
     echo "Restart Slurm Control Daemon on ${compute_hostnames} ..."
     sudo systemctl enable slurmd.service
@@ -102,13 +109,11 @@ then
     sudo yum install -y python2-pip
     sudo pip install paramiko
 
-#  get cpu count and replace it in the config 
-    cpucount=`cat /proc/cpuinfo  | grep processor | wc -l`
-    sed -i "s/CPUs=2/CPUs=$cpucount/" /home/opc/config
 
     sudo echo "ReturnToService=2" >> /home/opc/config
     sudo mkdir -p /mnt/shared/apps/slurm/
-    sudo cp /home/opc/config /mnt/shared/apps/slurm/slurm.conf
+#    sudo cp /home/opc/config /mnt/shared/apps/slurm/slurm.conf
+
     echo "Restart Slurm Control Daemon on ${control_hostname} ..."
     sudo systemctl enable slurmctld.service
     sudo systemctl restart slurmctld.service
