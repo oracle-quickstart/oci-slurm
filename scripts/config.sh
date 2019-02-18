@@ -41,8 +41,9 @@ echo "MinJobAge=3600" >> /home/opc/config
 sudo mv /home/opc/slurm.conf.tmp /etc/slurm/slurm.conf
 sudo echo "include /mnt/shared/apps/slurm/slurm.conf" >> /etc/slurm/slurm.conf
 
-sudo chmod 777  /etc/hosts
-sudo cat /mnt/shared/hosts >> /etc/hosts
+#comment out these two lines as compute nodes may not need them
+#sudo chmod 777  /etc/hosts
+#sudo cat /mnt/shared/hosts >> /etc/hosts
 
 sudo cat /mnt/shared/authorized_keys  >> /home/opc/.ssh/authorized_keys
 
@@ -70,6 +71,9 @@ fi
 # To start Slurm control daemon
 if [ "$1" = "control" ]
 then
+    sudo chmod 777  /etc/hosts
+    sudo cat /mnt/shared/hosts >> /etc/hosts
+
 ### create /opt/HPC-Agent/agent.conf
     touch ${slurm_fs_ip}
     sudo mkdir /opt/HPC-Agent/
