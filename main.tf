@@ -212,3 +212,11 @@ resource "null_resource" "auth" {
     ]
   }
 }
+
+resource "oci_core_image" "image" {
+  depends_on = ["module.slurm-auth"]
+
+  compartment_id = "${var.compartment_ocid}"
+  instance_id = "${module.slurm-compute.ids[0]}"
+  display_name = "slurmcompute"
+}
