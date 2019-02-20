@@ -97,13 +97,7 @@ chmod 600 id_rsa_oci6
 sleep 2
 cat ipaddr2 |  egrep -o "([0-9]{1,3}.){3}[0-9]" >> ipaddr
 ip=`cat ipaddr`
-sudo mount.nfs  $ip:/shared /mnt/shared
-sudo chmod 777 installmpi
-#./installmpi
-sudo date >> recordtime
-#sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
-sudo cat /home/opc/.ssh/id_rsa.pub >>  /mnt/shared/authorized_keys
-sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts
+#sudo mount.nfs  $ip:/shared /mnt/shared
 
 #sudo  mount.nfs $ip:/home/ /home/
 sudo mkdir /u01
@@ -111,8 +105,16 @@ sudo mkdir /u01
 sudo mkdir /UserHome
 #sudo  mount.nfs $ip:/UserHome /UserHome
 sudo chmod 777 /etc/fstab
+sudo echo "$ip:/shared /mnt/shared nfs" >> /etc/fstab
 sudo echo "$ip:/u01 /u01 nfs" >> /etc/fstab
 sudo echo "$ip:/UserHome /UserHome nfs" >> /etc/fstab
 sudo mount -a
+
+sudo chmod 777 installmpi
+#./installmpi
+sudo date >> recordtime
+#sudo cat /mnt/shared/id_rsa.pub  >> /home/opc/.ssh/authorized_keys
+sudo cat /home/opc/.ssh/id_rsa.pub >>  /mnt/shared/authorized_keys
+sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts
 
 sudo firewall-cmd --reload
