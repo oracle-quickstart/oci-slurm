@@ -163,18 +163,34 @@ resource "null_resource" "control" {
     bastion_user        = "${var.bastion_user}"
     bastion_private_key = "${file("${var.bastion_private_key}")}"
   }
+
   provisioner "file" {
     source      = "${path.module}/scripts/slurm.conf.tmp"
     destination = "~/slurm.conf.tmp"
   }
+
+
+  provisioner "file" {
+    source      = "/home/opc/.ssh/id_rsa"
+    destination = "~/.ssh/id_rsa_scale"
+  }
+
   provisioner "file" {
     content     = "${data.template_file.config_slurm.rendered}"
     destination = "~/config.sh"
   }
+
+  provisioner "file" {
+    source      = "${path.module}/scripts/install_terraform.sh"
+    destination = "~/install_terraform.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x ~/config.sh",
+      "chmod +x ~/install_terraform.sh",
       "~/config.sh control",
+      "~/install_terraform.sh",
     ]
   }
 }
@@ -183,7 +199,7 @@ resource "null_resource" "control" {
 # Config Slurm Auth Node
 ############################################
 resource "null_resource" "auth" {
-  depends_on = ["null_resource.compute"]
+  depends_on = ["null_resource.compute","module.slurm-auth"]
 
   # Changes to any instance of the compute node requires re-provisioning
 
