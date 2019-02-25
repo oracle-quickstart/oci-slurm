@@ -7,6 +7,7 @@ sudo yum -y install terraform terraform-provider-oci python-oci-cli bzip2 cpio z
 #generate API keys
 mkdir -p ~/.oci
 
+
 #get latest oci terraform installer
 LATEST="$(curl -sS https://github.com/terraform-providers/terraform-provider-oci/releases | tac | tac | grep -m1 "releases/tag" | awk -F "\"" '{ print $2 }'  | perl -pe '($_)=/([0-9]+([.][0-9]+)+)/')"
 wget https://github.com/terraform-providers/terraform-provider-oci/archive/v$LATEST/linux_amd64.tar.gz
