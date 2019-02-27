@@ -146,7 +146,7 @@ resource "null_resource" "compute" {
 # Config Slurm Control Node
 ############################################
 resource "null_resource" "control" {
-  depends_on = ["null_resource.compute"]
+  depends_on = ["null_resource.compute","module.slurm-auth"]
 
   # Changes to any instance of the compute node requires re-provisioning
 
@@ -199,7 +199,7 @@ resource "null_resource" "control" {
 # Config Slurm Auth Node
 ############################################
 resource "null_resource" "auth" {
-  depends_on = ["null_resource.compute","module.slurm-auth"]
+  depends_on = ["null_resource.compute"]
 
   # Changes to any instance of the compute node requires re-provisioning
 
