@@ -79,7 +79,7 @@ data "template_file" "config_slurm" {
     compute_ips       = "${join(",", module.slurm-compute.private_ips)}"
     compute_hostnames = "${join(",", module.slurm-compute.host_names)}"
     auth_ip           = "${module.slurm-auth.private_ip}"
-    ssh_prviate_key   = "${var.ssh_private_key}"
+    ssh_private_key   = "${var.ssh_private_key}"
   }
 }
 
