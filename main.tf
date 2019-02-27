@@ -171,7 +171,7 @@ resource "null_resource" "control" {
 
 
   provisioner "file" {
-    source      = "/home/opc/.ssh/id_rsa"
+    source      = "${var.ssh_private_key}"
     destination = "~/.ssh/id_rsa_scale"
   }
 
