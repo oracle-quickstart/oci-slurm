@@ -151,7 +151,7 @@ function validate_url() {
 # Download Agent
 # latest code:  git clone ssh://git@REPO_FQDN:7999/bigc/agent.git
 # https://REPO_FQDN/projects/BIGC/repos/agent/browse
-AgentURL="https://objectstorage.us-phoenix-1.oraclecloud.com/n/dxterraformdev/b/slurmagent/o/agent.tar.gz"
+AgentURL="https://objectstorage.us-ashburn-1.oraclecloud.com/n/m1-hpc20190201s/b/SlurmAgent/o/agent.tar.gz"
 AppURL="https://objectstorage.us-ashburn-1.oraclecloud.com/n/m1-hpcapptest0103/b/AppDeploy/o/App_deploy.sh"
 if  validate_url $AgentURL && validate_url $AppURL 
 then
