@@ -75,9 +75,11 @@ data "template_file" "config_slurm" {
     control_ip        = "${module.slurm-control.private_ip}"
     control_hostname  = "${module.slurm-control.host_name}"
     slurm_fs_ip       = "${var.slurm_fs_ip}"
+    slurm_bastion_ip  = "${var.bastion_host}"
     compute_ips       = "${join(",", module.slurm-compute.private_ips)}"
     compute_hostnames = "${join(",", module.slurm-compute.host_names)}"
     auth_ip           = "${module.slurm-auth.private_ip}"
+    ssh_prviate_key   = "${var.ssh_private_key}"
   }
 }
 
