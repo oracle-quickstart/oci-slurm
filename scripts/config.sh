@@ -92,6 +92,8 @@ then
     sudo echo " \"MQCredential\": \"\" ," >> /opt/HPC-Agent/agent.conf
     sudo echo " \"AccountServer\": \"${auth_ip}\" ," >> /opt/HPC-Agent/agent.conf
     sudo echo " \"AccountServerType\": \"nis\" ," >> /opt/HPC-Agent/agent.conf
+    sudo echo " \"LoginServer\" : \"${slurm_bastion_ip}\"," >> /opt/HPC-Agent/agent.conf 
+    sudo echo " \"PrivateKeyPathForLoginServer\" : \"${ssh_private_key}\"," >> /opt/HPC-Agent/agent.conf
     sudo echo " \"ClusterUserHome\": \"/UserHome\" ," >> /opt/HPC-Agent/agent.conf
     sudo echo " \"SudoGroupName\": \"sudogroup\"" >> /opt/HPC-Agent/agent.conf
     sudo echo "}" >> /opt/HPC-Agent/agent.conf
@@ -151,7 +153,7 @@ function validate_url() {
 # Download Agent
 # latest code:  git clone ssh://git@bitbucket.oci.oraclecorp.com:7999/bigc/agent.git
 # https://bitbucket.aka.lgl.grungy.us/projects/BIGC/repos/agent/browse
-AgentURL="https://objectstorage.us-ashburn-1.oraclecloud.com/n/m1-hpc20190201s/b/SlurmAgent/o/agent.tar.gz"
+AgentURL="https://objectstorage.us-ashburn-1.oraclecloud.com/p/X7_2Er69pRqfVu228DbQQH4jpHUAUXNqbo0ZwTgYLaU/n/m1-hpc20190201s/b/SlurmAgent/o/agent.tar.gz"
 AppURL="https://objectstorage.us-ashburn-1.oraclecloud.com/n/m1-hpcapptest0103/b/AppDeploy/o/App_deploy.sh"
 if  validate_url $AgentURL && validate_url $AppURL 
 then
