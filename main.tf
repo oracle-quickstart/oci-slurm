@@ -171,6 +171,10 @@ resource "null_resource" "control" {
     destination = "~/slurm.conf.tmp"
   }
 
+  provisioner "file" {
+    source      = "${path.module}/scripts/auto_scale_up.tf"
+    destination = "~/auto_scale_up.tf"
+  }
 
   provisioner "file" {
     source      = "${var.ssh_private_key}"
