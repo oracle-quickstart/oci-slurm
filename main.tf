@@ -177,6 +177,11 @@ resource "null_resource" "control" {
   }
 
   provisioner "file" {
+    source      = "${path.module}/examples/quick_start/terraform.tfvars"
+    destination = "~/terraform.tfvars"
+  }
+
+  provisioner "file" {
     source      = "${var.ssh_private_key}"
     destination = "~/.ssh/id_rsa_scale"
   }
