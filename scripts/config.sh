@@ -165,6 +165,7 @@ then
     cp agent/resource/sample_slurm_batch_resource/hostname.slurm /u01/HPC-Jobs/GHostnameDemo/hostname.slurm
     wget $AppURL
     cp App_deploy.sh  /u01/HPC-Apps/
+    cp auto_scale_up.tf /opt/HPC-Agent/auto_scale_up/
 #    cp agent/resource/misc/App_deploy.sh  /u01/HPC-Apps/
     for((i=1;i<=6;i++));
     do
