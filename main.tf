@@ -187,6 +187,11 @@ resource "null_resource" "control" {
   }
 
   provisioner "file" {
+    source      = "${var.private_key_path}"
+    destination = "~/.oci/oci_api_key.pem"
+  }
+
+  provisioner "file" {
     content     = "${data.template_file.config_slurm.rendered}"
     destination = "~/config.sh"
   }
