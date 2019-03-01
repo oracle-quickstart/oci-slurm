@@ -79,7 +79,7 @@ data "template_file" "config_slurm" {
     compute_ips       = "${join(",", module.slurm-compute.private_ips)}"
     compute_hostnames = "${join(",", module.slurm-compute.host_names)}"
     auth_ip           = "${module.slurm-auth.private_ip}"
-    ssh_private_key   = "${var.ssh_private_key}"
+    ssh_private_key   = "/home/opc/.ssh/id_rsa_scale"
   }
 }
 
@@ -188,7 +188,7 @@ resource "null_resource" "control" {
 
   provisioner "file" {
     source      = "${var.private_key_path}"
-    destination = "~/.oci/oci_api_key.pem"
+    destination = "~/.ssh/oci_api_key.pem"
   }
 
   provisioner "file" {
