@@ -201,12 +201,19 @@ resource "null_resource" "control" {
     destination = "~/install_terraform.sh"
   }
 
+  provisioner "file" {
+    source      = "${path.module}/scripts/replace.sh"
+    destination = "~/replace.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x ~/config.sh",
       "chmod +x ~/install_terraform.sh",
+      "chmod +x ~/replace.sh",
       "~/config.sh control",
       "~/install_terraform.sh",
+      "~/replace.sh",
     ]
   }
 }
