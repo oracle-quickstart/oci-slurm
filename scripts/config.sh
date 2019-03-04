@@ -76,7 +76,7 @@ then
     sudo chmod 600 /home/opc/.ssh/id_rsa_scale
     sudo mkdir -p /home/opc/.oci
     sudo chmod 777 /home/opc/.oci
-    sudo sed -i '/private_key_path=.*/d' /home/opc/terraform.tfvars
+    sudo sed -i '/private_key_path.*/d' /home/opc/terraform.tfvars
     sudo echo "private_key_path=/home/opc/.oci/oci_api_key.pem" >>  /home/opc/terraform.tfvars 
     sudo mv /home/opc/.ssh/oci_api_key.pem /home/opc/.oci/
 ### create /opt/HPC-Agent/agent.conf
