@@ -23,7 +23,7 @@ The following code shows how to deploy Slurm Cluster servers using this module:
 
 ```txt
 module "slurm-cluster" {
-  source              = "git::ssh://git@bitbucket.aka.lgl.grungy.us:7999/tfs/terraform-oci-slurm.git?ref=dev"
+  source              = "git::ssh://git@bitbucket.oci.oraclecorp.com:7999/tfs/terraform-oci-slurm.git?ref=dev"
   compartment_ocid    = "${var.compartment_ocid}"
   ssh_authorized_keys = "${var.ssh_authorized_keys}"
   ssh_private_key     = "${var.ssh_private_key}"
