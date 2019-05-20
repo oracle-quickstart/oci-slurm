@@ -1,4 +1,6 @@
-# Oracle Cloud Infrastructure Terraform Slurm Module
+# oci-quickstart-slurm
+
+These are Terraform modules that deploy [Slurm](https://slurm.schedmd.com/) on [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/en_US/cloud-infrastructure).
 
 ## About
 The Slurm Module installs a Terraform-based Slurm cluster on Oracle Cloud Infrastructure (OCI). A Slurm cluster typically involves one Slurm Control node coupled with one or more Slurm compute nodes.
@@ -60,16 +62,3 @@ compute_shape | Shape to be used on the compute instance.
 bastion_host | The bastion host IP.
 bastion_user | The SSH user to connect to the bastion host, by default is opc.
 bastion_private_key | The private key path to access the bastion host.
-
-
-## Contributing
-
-This project is open source. Oracle appreciates any contributions that are made by the open source community.
-
-## License
-
-Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
-
-Licensed under the Universal Permissive License 1.0 or Apache License 2.0.
-
-See [LICENSE](./LICENSE.txt) for more details.
