@@ -71,9 +71,9 @@ resource "oci_core_security_list" "slurmnat" {
   }]
 }
 
-resource "oci_core_security_list" "slurmnode" {
+resource "oci_core_security_list" "slurmcontrol" {
   compartment_id = "${var.compartment_ocid}"
-  display_name   = "slurmcnode"
+  display_name   = "slurmcontrolnode"
   vcn_id         = "${oci_core_virtual_network.slurmvcn.id}"
 
   egress_security_rules = [{
@@ -158,7 +158,7 @@ resource "oci_core_security_list" "slurmnode" {
 
 resource "oci_core_security_list" "slurmcomputenode" {
   compartment_id = "${var.compartment_ocid}"
-  display_name   = "slurmcnode"
+  display_name   = "slurmcomputenode"
   vcn_id         = "${oci_core_virtual_network.slurmvcn.id}"
 
   egress_security_rules = [{
@@ -348,7 +348,7 @@ resource "oci_core_subnet" "slurmcontrol" {
   cidr_block          = "${cidrsubnet("${local.control_subnet_prefix}", 4, 0)}"
   display_name        = "slurmcontrol"
   dns_label           = "slurmcontrol"
-  security_list_ids   = ["${oci_core_security_list.slurmnode.id}"]
+  security_list_ids   = ["${oci_core_security_list.slurmcontrol.id}"]
   compartment_id      = "${var.compartment_ocid}"
   vcn_id              = "${oci_core_virtual_network.slurmvcn.id}"
   route_table_id      = "${oci_core_route_table.private.id}"
