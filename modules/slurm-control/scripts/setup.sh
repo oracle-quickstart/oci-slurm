@@ -12,7 +12,6 @@ function validate_url() {
     fi
 }
 
-
 # Installing required bits and bobs
 sudo yum install -y nfs-utils munge-devel munge-libs readline-devel perl-ExtUtils-MakeMaker openssl-devel pam-devel rpm-build gcc perl-DBI perl-Switch munge mariadb-devel
 
