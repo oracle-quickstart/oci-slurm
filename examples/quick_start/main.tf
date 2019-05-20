@@ -26,17 +26,24 @@ resource "oci_core_instance" "slurmbastion" {
 # Config Bastion Node
 # ------------------------------------------------------------------------------
 resource "null_resource" "bastion" {
-  provisioner "file" {
-    connection = {
-      host        = "${oci_core_instance.slurmbastion.public_ip}"
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = "${file("${var.ssh_private_key}")}"
-    }
 
+  connection = {
+    host        = "${oci_core_instance.slurmbastion.public_ip}"
+    agent       = false
+    timeout     = "5m"
+    user        = "opc"
+    private_key = "${file("${var.ssh_private_key}")}"
+  }
+
+  provisioner "file" {
     source      = "${var.ssh_private_key}"
     destination = "~/id_rsa_oci"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 600 ~/id_rsa_oci",
+    ]
   }
 }
 
@@ -54,11 +61,12 @@ module "slurm-cluster" {
   compute_ad          = "${data.template_file.ad_names.*.rendered[1]}"
   compute_subnet_id   = "${oci_core_subnet.slurmcompute.id}"
   compute_image_id    = "${var.image_id[var.region]}"
-  compute_count       = 1
+  compute_count       = 2 
   bastion_host        = "${oci_core_instance.slurmbastion.public_ip}"
   bastion_user        = "${var.bastion_user}"
   bastion_private_key = "${var.bastion_private_key}"
   slurm_fs_ip         = "${data.oci_core_private_ips.IPClusterFSMountTarget.private_ips.0.ip_address}"
+  private_key_path    = "${var.private_key_path}"
   enable_nis          = "${var.enable_nis}"
   enable_ldap         = "${var.enable_ldap}"
   auth_subnet_id      = "${oci_core_subnet.NISServerSubnetAD.id}"

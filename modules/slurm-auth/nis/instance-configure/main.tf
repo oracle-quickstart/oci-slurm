@@ -42,6 +42,7 @@ resource "null_resource" "configure_nis_server" {
 
   provisioner "remote-exec" {
     inline = [
+      "sudo yes \"y\" | ssh-keygen -N \"\" -f ~/.ssh/id_rsa",
       "chmod +x ~/configure-server.sh",
       "sudo sh ~/configure-server.sh",
     ]

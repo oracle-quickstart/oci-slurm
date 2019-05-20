@@ -75,9 +75,11 @@ data "template_file" "config_slurm" {
     control_ip        = "${module.slurm-control.private_ip}"
     control_hostname  = "${module.slurm-control.host_name}"
     slurm_fs_ip       = "${var.slurm_fs_ip}"
+    slurm_bastion_ip  = "${var.bastion_host}"
     compute_ips       = "${join(",", module.slurm-compute.private_ips)}"
     compute_hostnames = "${join(",", module.slurm-compute.host_names)}"
     auth_ip           = "${module.slurm-auth.private_ip}"
+    ssh_private_key   = "/home/opc/.ssh/id_rsa_scale"
   }
 }
 
@@ -146,7 +148,7 @@ resource "null_resource" "compute" {
 # Config Slurm Control Node
 ############################################
 resource "null_resource" "control" {
-  depends_on = ["null_resource.compute"]
+  depends_on = ["null_resource.compute","module.slurm-auth"]
 
   # Changes to any instance of the compute node requires re-provisioning
 
@@ -163,10 +165,81 @@ resource "null_resource" "control" {
     bastion_user        = "${var.bastion_user}"
     bastion_private_key = "${file("${var.bastion_private_key}")}"
   }
+
   provisioner "file" {
     source      = "${path.module}/scripts/slurm.conf.tmp"
     destination = "~/slurm.conf.tmp"
   }
+
+  provisioner "file" {
+    source      = "${path.module}/scripts/auto_scale_up.tf"
+    destination = "~/auto_scale_up.tf"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/examples/quick_start/terraform.tfvars"
+    destination = "~/terraform.tfvars"
+  }
+
+  provisioner "file" {
+    source      = "${var.ssh_private_key}"
+    destination = "~/.ssh/id_rsa_scale"
+  }
+
+  provisioner "file" {
+    source      = "${var.private_key_path}"
+    destination = "~/.ssh/oci_api_key.pem"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.config_slurm.rendered}"
+    destination = "~/config.sh"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/scripts/install_terraform.sh"
+    destination = "~/install_terraform.sh"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/scripts/replace.sh"
+    destination = "~/replace.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x ~/config.sh",
+      "chmod +x ~/install_terraform.sh",
+      "chmod +x ~/replace.sh",
+      "~/config.sh control",
+      "~/install_terraform.sh",
+      "~/replace.sh",
+    ]
+  }
+}
+
+############################################
+# Config Slurm Auth Node
+############################################
+resource "null_resource" "auth" {
+  depends_on = ["null_resource.compute"]
+
+  # Changes to any instance of the compute node requires re-provisioning
+
+  triggers {
+    compute_hostnames = "${join(" ", module.slurm-compute.host_names)}"
+  }
+  connection = {
+    host                = "${module.slurm-auth.private_ip}"
+    agent               = false
+    timeout             = "10m"
+    user                = "opc"
+    private_key         = "${file("${var.ssh_private_key}")}"
+    bastion_host        = "${var.bastion_host}"
+    bastion_user        = "${var.bastion_user}"
+    bastion_private_key = "${file("${var.bastion_private_key}")}"
+  }
+
   provisioner "file" {
     content     = "${data.template_file.config_slurm.rendered}"
     destination = "~/config.sh"
@@ -174,7 +247,15 @@ resource "null_resource" "control" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x ~/config.sh",
-      "~/config.sh control",
+      "~/config.sh auth",
     ]
   }
+}
+
+resource "oci_core_image" "image" {
+  depends_on = ["module.slurm-auth"]
+
+  compartment_id = "${var.compartment_ocid}"
+  instance_id = "${module.slurm-compute.ids[0]}"
+  display_name = "slurmcompute"
 }

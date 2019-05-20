@@ -1,5 +1,5 @@
 #!/bin/bash
-
+exec &> slurm_control_setup.txt
 set -e -x
 
 # Check URL if exists
@@ -114,7 +114,19 @@ sudo chmod 777 /home/opc/getfsipaddr
 /home/opc/getfsipaddr
 cat ipaddr2 |  egrep -o "([0-9]{1,3}.){3}[0-9]" >> ipaddr3
 ip=`cat ipaddr3`
-sudo mount.nfs  $ip:/shared /mnt/shared
+#sudo mount.nfs  $ip:/shared /mnt/shared
+
+#sudo  mount.nfs $ip:/home/ /home/
+sudo mkdir /u01
+#sudo  mount.nfs $ip:/u01/ /u01/
+sudo mkdir /UserHome
+#sudo  mount.nfs $ip:/UserHome /UserHome
+sudo chmod 777 /etc/fstab
+sudo echo "$ip:/shared /mnt/shared nfs" >> /etc/fstab
+sudo echo "$ip:/u01 /u01 nfs" >> /etc/fstab
+sudo echo "$ip:/UserHome /UserHome nfs" >> /etc/fstab
+sudo mount -a
+
 
 sudo touch /mnt/shared/authorized_keys
 sudo chmod 777  /mnt/shared/authorized_keys
@@ -125,11 +137,5 @@ sudo chmod 777 installmpi
 sudo touch /mnt/shared/hosts
 sudo chmod 777  /mnt/shared/hosts
 sudo cat /etc/hosts  | grep "10." >> /mnt/shared/hosts
-
-#sudo  mount.nfs $ip:/home/ /home/
-sudo mkdir /u01
-sudo  mount.nfs $ip:/u01/ /u01/
-sudo mkdir /UserHome
-sudo  mount.nfs $ip:/UserHome /UserHome
 
 sudo firewall-cmd --reload

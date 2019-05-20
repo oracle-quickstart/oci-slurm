@@ -94,6 +94,10 @@ variable "slurm_fs_ip" {
   description = "The fs ip."
 }
 
+variable "private_key_path" {
+  description = "private_key_path for oci."
+}
+
 variable "auth_display_name" {
   description = "The name of the auth instance. "
   default     = "slurmauth"
