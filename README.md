@@ -1,4 +1,4 @@
-# oci-quickstart-slurm
+# oci-slurm
 
 These are Terraform modules that deploy [Slurm](https://slurm.schedmd.com/) on [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/en_US/cloud-infrastructure).
 
