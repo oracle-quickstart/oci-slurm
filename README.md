@@ -1,6 +1,6 @@
 # oci-slurm
 
-These are Terraform modules that deploy [Slurm](https://slurm.schedmd.com/) on [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/en_US/cloud-infrastructure).
+These are Terraform modules that deploy [Slurm](https://slurm.schedmd.com/) on [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/en_US/cloud-infrastructure).  They are developed jointly by Oracle and [SchedMD](https://www.schedmd.com/).
 
 ## About
 The Slurm Module installs a Terraform-based Slurm cluster on Oracle Cloud Infrastructure (OCI). A Slurm cluster typically involves one Slurm Control node coupled with one or more Slurm compute nodes.
